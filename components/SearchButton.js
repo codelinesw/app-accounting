@@ -3,22 +3,30 @@ import { StyleSheet, Alert, TouchableOpacity, Button, Text } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 
 
-export default class ButtonMenu extends React.Component{
+export default class SearchButton extends React.Component{
+  	
+  	constructor(props){
+  		super(props);
+  		this.state = {
+  			color:'#838383',
+  		};
+  	}
 	showAlert(){
 		Alert.alert(
-			'Hello, Jhon how are you!'	
+			'Hello, Jhon how are you!'
 		)
 	}
+
 	render(){
 		return(
 
-			<TouchableOpacity 
+			<TouchableOpacity
 			style={styles.menuIcon}
-			onPress={() => this.props.navigation.toggleDrawer()}
+			onPress={() => this.showAlert()}
 			>
 				<Ionicons
-				 name="md-menu"
-				 color="#000000"
+				 name="md-search"
+				 color={this.props.color}
 				 size={32}
 				 style={styles.barmenu}
 				/>
@@ -36,8 +44,8 @@ const styles = StyleSheet.create({
 		top:0,
 		left:5,
 		padding:10,
-		
+
 	},
 
-	
+
 });

@@ -3,22 +3,22 @@ import { StyleSheet, Alert, TouchableOpacity, Button, Text } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 
 
-export default class ButtonMenu extends React.Component{
+export default class ButtonBack extends React.Component{
 	showAlert(){
 		Alert.alert(
-			'Hello, Jhon how are you!'	
+			'Hello, Jhon how are you!'
 		)
 	}
 	render(){
 		return(
 
-			<TouchableOpacity 
+			<TouchableOpacity
 			style={styles.menuIcon}
-			onPress={() => this.props.navigation.toggleDrawer()}
+			onPress={() => this.props.navigation.navigate("Clients")}
 			>
 				<Ionicons
-				 name="md-menu"
-				 color="#000000"
+				 name="md-arrow-back"
+				 color="#ffffff"
 				 size={32}
 				 style={styles.barmenu}
 				/>
@@ -34,10 +34,10 @@ const styles = StyleSheet.create({
 		zIndex: 9,
 		position:'relative',
 		top:0,
-		left:5,
+		left:10,
 		padding:10,
-		
+
 	},
 
-	
+
 });
