@@ -91,13 +91,21 @@ export default class AddClient extends React.Component{
       this._onShowUnderlay("complete por favor el numero",styles.error);
     }else{
       this.setState({ready_:true,active:true});
-  
-      fetch('https://cdfb345f.ngrok.io/website-testing/borrower/list_info/',{
+      //alert(this.state.name_ + ' - ' + this.state.address + ' - ' + this.state.phone);
+      const { name_, address, phone } = this.state;
+
+      fetch('https://3563826c.ngrok.io/app-accounting/clients.php',{
             method: 'post',
             headers: {
-              'Accept': 'application/json',
+              'Accept': 'application/json, text/plain, */*',
               'Content-Type': 'application/json'
             },
+            body: JSON.stringify({
+              action:'add',
+              name:name_,
+              address:address,
+              phone:phone
+            })
             
         })
         .then(res => res.json())
@@ -108,6 +116,8 @@ export default class AddClient extends React.Component{
             ready_:false,
             active:false,
           });
+
+          //alert(JSON.stringify(res));
           if(this.state.isLoaded)
           {
             if(!this.state.isactive){

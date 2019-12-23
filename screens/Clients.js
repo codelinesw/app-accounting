@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Button, Alert, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Button, Alert, Image, ActivityIndicator  } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 
@@ -13,7 +13,64 @@ var count = 0,
     countTwo = 0;
 
 export default class Clients extends React.Component{
+   _isMounted = false;
+  constructor(props) {
+    super(props);
+    this.state = { 
+       data_:[""],
+       typeIcon: 'md-arrow-up', 
+       changeColor: '#c3c3c3',
+       ready_:false,
+    };
+  }
 
+  requestData(){
+    this._isMounted = true;
+
+    fetch('https://3563826c.ngrok.io/app-accounting/clients.php',{
+            method: 'post',
+            headers: {
+              'Accept': 'application/json, text/plain, */*',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              action:'list',
+            })
+            
+        })
+        .then(res => res.json())
+        .then(res => {
+          if(this._isMounted){
+            this.setState({
+              isLoaded: true,
+              ready_:true,
+              data_:res,
+            });
+          }
+          //alert(JSON.stringify(res));
+          
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        })
+        .catch(function(error) {
+          Alert.alert(
+            error.message
+          )
+         // ADD THIS THROW error
+          throw error;
+        });
+  }
+  componentDidMount(){
+    this.requestData();
+  }
+  
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
   showAlert(){
     if(count == 0){
       this.setState({typeIcon: 'md-arrow-down',});
@@ -34,9 +91,33 @@ export default class Clients extends React.Component{
     }
   }
 
-  constructor(props) {
-    super(props);
-    this.state = { typeIcon: 'md-arrow-up', changeColor: '#c3c3c3',};
+
+  returnData(){
+    //alert(JSON.parse(this.state.data_));
+   if(!this._isMounted){
+     return  (<View style={styles.container_preloader}>
+        <View style={styles.preloader}><ActivityIndicator size="large" /></View>
+      </View>)
+   }else{
+      var ComponentRender =  this.state.data_.map((data,i) => {
+          return(
+              <View style={styles.content_info_user} key={data.c_client_id}>
+                <Image source={require('../images/user.png')} style={styles.avatar} />
+                <View style={styles.info_user}>
+                  <Text style={styles.name_user}>{data.c_name}</Text>
+                  <Text style={styles.current_user}>(+57) {data.c_phone}</Text>
+                  <Text style={styles.date_client}>{data.c_date}</Text>
+                  <TouchableOpacity style={styles.buttonStar} onPress={() => this.changeState()}><Ionicons name="md-star" color={this.state.changeColor} size={22} style={styles.IconArrow}/></TouchableOpacity>
+                  <Text style={styles.sale_price}>$180.0000</Text>
+                </View>
+            </View>
+            )
+      });
+     return ComponentRender;
+   } 
+                  
+                
+   
   }
   render(){
     return(
@@ -53,36 +134,7 @@ export default class Clients extends React.Component{
               </View>
               <View style={styles.containerClients}>
                 <FloatButton style={[styles.menuIcon,styles.bgroundGreen]} navigation={this.props.navigation}/>
-                <View style={styles.content_info_user}>
-                  <Image source={require('../images/user.png')} style={styles.avatar} />
-                  <View style={styles.info_user}>
-                    <Text style={styles.name_user}>JHON MURILLO MENDEZ</Text>
-                    <Text style={styles.current_user}>(+57) 3117222333</Text>
-                    <Text style={styles.date_client}>17 Diciembre del 2019</Text>
-                    <TouchableOpacity style={styles.buttonStar} onPress={() => this.changeState()}><Ionicons name="md-star" color={this.state.changeColor} size={22} style={styles.IconArrow}/></TouchableOpacity>
-                    <Text style={styles.sale_price}>$180.0000</Text>
-                  </View>
-                </View>
-                <View style={styles.content_info_user}>
-                  <Image source={require('../images/user.png')} style={styles.avatar} />
-                  <View style={styles.info_user}>
-                    <Text style={styles.name_user}>JHON MURILLO MENDEZ</Text>
-                    <Text style={styles.current_user}>(+57) 3117222333</Text>
-                    <Text style={styles.date_client}>17 Diciembre del 2019</Text>
-                    <TouchableOpacity style={styles.buttonStar} onPress={() => this.changeState()}><Ionicons name="md-star" color={this.state.changeColor} size={22} style={styles.IconArrow}/></TouchableOpacity>
-                    <Text style={styles.sale_price}>$180.0000</Text>
-                  </View>
-                </View>
-                <View style={styles.content_info_user}>
-                  <Image source={require('../images/user.png')} style={styles.avatar} />
-                  <View style={styles.info_user}>
-                    <Text style={styles.name_user}>JHON MURILLO MENDEZ</Text>
-                    <Text style={styles.current_user}>(+57) 3117222333</Text>
-                    <Text style={styles.date_client}>17 Diciembre del 2019</Text>
-                    <TouchableOpacity style={styles.buttonStar} onPress={() => this.changeState()}><Ionicons name="md-star" color={this.state.changeColor} size={22} style={styles.IconArrow}/></TouchableOpacity>
-                    <Text style={styles.sale_price}>$180.0000</Text>
-                  </View>
-                </View>
+                {this.returnData()}
               </View>
             </View>
         </View>
@@ -240,5 +292,29 @@ const styles = StyleSheet.create({
 
   bgroundGreen: {
     backgroundColor:'#7EE393',
+  },
+
+  container_preloader: {
+    position:'absolute',
+    top:0,
+    zIndex:2000,
+    width:(WIDTH-38),
+    height:330,
+    backgroundColor:'rgba(255,255,255,0.6)',
+    justifyContent:'center',
+    alignItems:'center',
+
+  },
+
+  preloader:{
+    position:'relative',
+    top:-42,
+    left:20,
+    width:80,
+    height:80,
+    zIndex:200,
+    justifyContent:'center',
+    alignItems:'center',
+    
   },
 });

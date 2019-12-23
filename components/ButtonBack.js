@@ -14,7 +14,7 @@ export default class ButtonBack extends React.Component{
 
 			<TouchableOpacity
 			style={styles.menuIcon}
-			onPress={() => this.props.navigation.navigate("Clients")}
+			onPress={() => this.props.navigation.goBack(null)}
 			>
 				<Ionicons
 				 name="md-arrow-back"
