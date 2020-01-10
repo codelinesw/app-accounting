@@ -3,12 +3,11 @@ import { StyleSheet, Text, View } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 
-
-import AppContainer from "./navigation/DrawerNavigator";
+import Home from "./screens/Home";
 
 export default class App extends React.Component {
   render(){
-    return <AppContainer/>;
+    return <Home/>;
   }
 }
 const styles = StyleSheet.create({
