@@ -8,7 +8,7 @@ const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
 export default class Home extends React.Component{
-	
+
   constructor(props){
     super(props);
 
@@ -19,7 +19,10 @@ export default class Home extends React.Component{
       value:'',
       showing:false,
       expand:true,
+      nameicon:'md-arrow-up',
+      nameorder:'ASCENDETE'
     };
+    this._count_ = 0;
   }
 
   componentDidMount() {
@@ -38,16 +41,22 @@ export default class Home extends React.Component{
     }
     
   }
+  changeOrder(){
+    if(this._count_ == 0){
+      this.setState({nameicon:'md-arrow-down',nameorder:'DESCENDENTE'});
+      this._count_ = 1;
+    }else{
+      this.setState({nameicon:'md-arrow-up',nameorder:'ASCENDENTE'});
+      this._count_ = 0;
+    }
+  }
 
   render(){
-		const { fontsLoaded, poppins, poppinsBold, value, showing, expand } = this.state;
+		const { fontsLoaded, poppins, poppinsBold, value, showing, expand, nameicon, nameorder } = this.state;
 
     if(fontsLoaded){
       return(
         <View style={styles.container}>
-             <View style={styles.content_title}>
-               <Text style={[styles.title,{fontFamily:poppinsBold,}]}>Acceso rapido</Text>
-             </View>
              <View style={[styles.container_divider,styles.container_divider_white]}>
                <View style={styles.panel_left}>
                  <Image source={require('../images/user.png')} style={styles.avatar} />
@@ -65,18 +74,17 @@ export default class Home extends React.Component{
                </View>
              </View>
              <View style={styles.body_}>
-               <Text style={[styles.title,{fontFamily:poppins,}]}>Acceso rapido</Text>
-               <View style={[styles.bar_show_state_,styles.search_bar]}>
-                 <Ionicons name="md-search" size={30} color="#a4a6ac" style={{top:1,}}/>
-                 <TextInput
-                    style={[styles.inputSearch,styles.textsearch,{fontFamily:poppins,},expand ? styles.inputExpand : '']}
-                    onChangeText={text => this.onchangetext(text)}
-                    value={value}
-                    placeholder="Buscas algo?"
-                  />
-                  {showing ? <TouchableOpacity style={[styles.btnfavorites,styles.btndeletetext]}>
-                    <Ionicons name="md-close" color="#a4a6ac" size={22} />
-                 </TouchableOpacity> : null}
+               <View style={styles.headerTitle}>
+                  <Text style={[styles.textlight,{fontSize:12},{fontFamily:poppins,}]}>TODOS</Text>
+                  <TouchableOpacity style={styles.buttonorder} onPress={() => this.changeOrder()}>
+                    <Text style={[styles.textlight,{fontSize:12},{fontFamily:poppins,}]}>{nameorder}</Text>
+                    <Ionicons
+                      name={nameicon}
+                      color="#a4a6ac"
+                      size={18}
+                      style={styles.iconArrow}
+                     />
+                   </TouchableOpacity>
                </View>
                <View style={styles.bar_show_state_}>
                  <View style={{flexDirection:'row'}}>
@@ -99,27 +107,25 @@ export default class Home extends React.Component{
                  <Text style={[styles.text,{fontFamily:poppins,}]}>Fecha: <Text style={[styles.textlight,{fontFamily:poppins,}]}> 9/01/2019</Text></Text>
                  <Text style={[styles.text,{fontFamily:poppins,}]}>Valor: <Text style={[styles.textlight,{fontFamily:poppins,}]}>$80.000</Text></Text>
                  <Text style={[styles.text,{fontFamily:poppins,}]}>Abono: <Text style={[styles.textlight,{fontFamily:poppins,}]}>$10.000</Text></Text>
-                 <Text style={[{fontFamily:poppins,},styles.bottomRight]}>Saldo: <Text style={[styles.textlight,{fontFamily:poppinsBold,},styles.colorGreen]}>$70.000</Text></Text>
+                 <Text style={[{fontFamily:poppins,},styles.bottomRight]}>Saldo: <Text style={[styles.textlight,{fontFamily:poppinsBold,}]}>$70.000</Text></Text>
                </View>
-               <View style={[styles.box_information,styles.expand_box_information]}>
-                 <View style={{flexDirection:'row'}}>
-                   <View style={[styles.circle,styles.bgroundPurpple]}></View>
-                   <Text style={[styles.title,{fontFamily:poppinsBold,}]}>Jhon Denver Murillo Mendez</Text>
-                 </View>
-                 <Text style={[styles.textlight,{fontFamily:poppins,}]}>(+57) 3117222333</Text>
-                 <Text style={[styles.textlight,{fontFamily:poppins,}]}>Jhon es un cliente que le gusta hacer compras constantemente de jeans</Text>
-                 <View style={styles.btnGroup}>
-                   <TouchableOpacity style={styles.btngray}>
-                     <Text style={[styles.textlight,{fontFamily:poppins,}]}>Editar</Text>
-                   </TouchableOpacity> 
-                   <TouchableOpacity style={styles.btnwgray}>
-                     <Text style={[styles.textlight,{fontFamily:poppins,}]}>Eliminar</Text>
-                   </TouchableOpacity> 
-                 </View>
-                 <TouchableOpacity style={styles.btnfavorites}>
-                    <Ionicons name="md-star" color="#a4a6ac" size={22} />
-                 </TouchableOpacity>
-                 <Text style={[styles.textdate,{fontFamily:poppins,}]}>09/01/2019</Text>
+               <View style={[styles.box_information,styles.borderYellow]}>
+                 <Text style={[styles.title,{fontFamily:poppinsBold,}]}>Compra</Text>
+                 <Text style={[styles.text,{fontFamily:poppins,}]}>Prenda: <Text style={[styles.textlight,{fontFamily:poppins,}]}>Jean</Text></Text>
+                 <Text style={[styles.text,{fontFamily:poppins,}]}>Cantidad: <Text style={[styles.textlight,{fontFamily:poppins,}]}>1</Text></Text>
+                 <Text style={[styles.text,{fontFamily:poppins,}]}>Fecha: <Text style={[styles.textlight,{fontFamily:poppins,}]}> 9/01/2019</Text></Text>
+                 <Text style={[styles.text,{fontFamily:poppins,}]}>Valor: <Text style={[styles.textlight,{fontFamily:poppins,}]}>$80.000</Text></Text>
+                 <Text style={[styles.text,{fontFamily:poppins,}]}>Abono: <Text style={[styles.textlight,{fontFamily:poppins,}]}>$10.000</Text></Text>
+                 <Text style={[{fontFamily:poppins,},styles.bottomRight]}>Saldo: <Text style={[styles.textlight,{fontFamily:poppinsBold,}]}>$70.000</Text></Text>
+               </View>
+               <View style={[styles.box_information,styles.borderPurpple]}>
+                 <Text style={[styles.title,{fontFamily:poppinsBold,}]}>Compra</Text>
+                 <Text style={[styles.text,{fontFamily:poppins,}]}>Prenda: <Text style={[styles.textlight,{fontFamily:poppins,}]}>Jean</Text></Text>
+                 <Text style={[styles.text,{fontFamily:poppins,}]}>Cantidad: <Text style={[styles.textlight,{fontFamily:poppins,}]}>1</Text></Text>
+                 <Text style={[styles.text,{fontFamily:poppins,}]}>Fecha: <Text style={[styles.textlight,{fontFamily:poppins,}]}> 9/01/2019</Text></Text>
+                 <Text style={[styles.text,{fontFamily:poppins,}]}>Valor: <Text style={[styles.textlight,{fontFamily:poppins,}]}>$80.000</Text></Text>
+                 <Text style={[styles.text,{fontFamily:poppins,}]}>Abono: <Text style={[styles.textlight,{fontFamily:poppins,}]}>$10.000</Text></Text>
+                 <Text style={[{fontFamily:poppins,},styles.bottomRight]}>Saldo: <Text style={[styles.textlight,{fontFamily:poppinsBold,}]}>$70.000</Text></Text>
                </View>
              </View>
 
@@ -136,3 +142,4 @@ export default class Home extends React.Component{
     }
 	}
 }
+

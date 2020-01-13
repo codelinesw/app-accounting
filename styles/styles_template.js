@@ -16,6 +16,8 @@ const btnGray   = '#f5f5f5';
 const WIDTH  = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
+
+
 /* Here all style are defined */
 
 const styles = StyleSheet.create({
@@ -24,11 +26,29 @@ const styles = StyleSheet.create({
     height:HEIGHT,
     backgroundColor: bgGray,
   },
+
+  fullwidth: {
+    width:WIDTH,
+  },
+  extandar_width: {
+    width: (WIDTH-35),
+    left:0,
+  },
   content_title:{
   	position:'relative',
   	width:WIDTH,
   	height:45,
   	marginTop:30,
+  },
+
+  headerTitle:{
+    width:WIDTH,
+    height:49,
+    flexDirection: 'row',
+    justifyContent:'space-between',
+    alignItems:'center',
+    paddingLeft:10,
+    paddingRight:10,
   },
 
   //container all items of body
@@ -67,6 +87,23 @@ const styles = StyleSheet.create({
   	marginLeft:8,
   	top:2,
   	color:darklight,
+  },
+
+  textwhite: {
+    color:white,
+  },
+
+  fontsizeDate: {
+    fontSize:20,
+    textAlign:'center',
+    marginTop:5,
+    marginBottom:0,
+  },
+
+  text_day_week_: {
+    top:-10,
+    fontSize:10,
+    textAlign:'center',
   },
 
   //styles for box where is all info for clients or balances
@@ -115,6 +152,16 @@ const styles = StyleSheet.create({
   	borderLeftColor:bgGreen,
   },
 
+  borderYellow: {
+    borderLeftWidth:5,
+    borderLeftColor:bgYellow,
+  },
+
+  borderPurpple: {
+    borderLeftWidth:5,
+    borderLeftColor:bgPurpple,
+  },
+
   //styles for container of button
   btnGroup: {
   	position:'relative',
@@ -155,6 +202,15 @@ const styles = StyleSheet.create({
   	
   },
 
+  btndeletetext:{
+    position:'relative',
+    top:0,
+    right:0,
+    padding:6,
+    width:30,
+    marginLeft:5,
+  },
+
   bgroundGreen: {
   	backgroundColor:bgGreen,
   },
@@ -169,7 +225,129 @@ const styles = StyleSheet.create({
 
   bgroundPurpple:{
   	backgroundColor:bgPurpple,
-  }
+  },
+
+  bgroundDark: {
+    backgroundColor:'#535D7C',
+  },
+
+  //styles for bar state
+  bar_show_state_: {
+    width:(WIDTH-35),
+    flexDirection:'row',
+    height:35,
+    padding:5,
+    paddingRight:15,
+    paddingLeft:12,
+    backgroundColor:white,
+    backgroundColor:white,
+    borderRadius:6,
+    shadowOffset: {width: 13, height: 13}, 
+    shadowRadius: 16.00,
+    // android (Android +5.0)
+    shadowColor:'red',
+    shadowOpacity: 0.010,
+    elevation:4,
+    justifyContent:'space-between',
+    alignContent:'center',
+  },
+
+  //styles for search bar
+  search_bar:{
+    height:45,
+    marginBottom:15,
+    borderRadius:3,
+    shadowOffset: {width: 13, height: 13}, 
+    shadowRadius: 16.00,
+    // android (Android +5.0)
+    shadowColor:'red',
+    shadowOpacity: 0.010,
+    elevation:8,
+  },
+  inputSearch: {
+    top:-2,
+    width:(WIDTH-115),
+    height:38,
+    marginLeft:5,
+    paddingLeft:6,
+  },
+  textsearch: {
+    color:darklight,
+  },
+
+  inputExpand: {
+    width:(WIDTH-80),
+  },
+
+  container_divider: {
+    width:WIDTH,
+    height:82,
+    left:0,
+    flexDirection:'row',
+    borderBottomWidth:1,
+    borderBottomColor:'#e1e1e6',
+  },
+
+  container_divider_white: {
+    backgroundColor:'#ffffff',
+  },
+  panel_left: {
+    width:(WIDTH-(WIDTH-62)),
+    height:81,
+  },
+  panel_right: {
+    width:(WIDTH-62),
+    height:81,
+  },
+  avatar:{
+    top:12,
+    left:8,
+    width:50,
+    height:50,
+    borderRadius:6,
+  },
+
+  buttonorder: {
+    position:'relative',
+    flexDirection:'row',
+    padding:2,
+  },
+
+  iconArrow: {
+    marginLeft:5,
+  },
+
+  container_pie_chart: {
+    position:'relative',
+    marginTop:10,
+    width:(WIDTH-35),
+    height:200,
+    backgroundColor:white,
+    borderRadius:3,
+    shadowOffset: {width: 13, height: 13}, 
+    shadowRadius: 16.00,
+    // android (Android +5.0)
+    shadowColor:'red',
+    shadowOpacity: 0.010,
+    elevation:8,
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'center',
+  },
+
+  left_middle_more: {
+    width:210,
+    height:210,
+    alignItems:'center',
+    justifyContent:'center',
+  },
+
+  right_middle_more: {
+    width:((WIDTH-35)-210),
+    height:200,
+    alignItems:'center',
+    justifyContent:'center',
+  },
 });
 
 

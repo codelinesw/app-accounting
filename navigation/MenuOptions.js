@@ -19,7 +19,7 @@ export default class MenuOptions extends React.Component {
               <Image source={require('../images/home.png')} style={styles.icon_link} />
               <Text style={{top:5,marginLeft:10,color:'#737373',fontWeight: 'bold',fontSize:16,}}>Inicio</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.link_navigation} onPress={() => this.props.navigation.navigate('Accounting')}>
+            <TouchableOpacity style={styles.link_navigation} onPress={() => this.props.navigation.navigate('Balances')}>
               <Image source={require('../images/discount.png')} style={styles.icon_link} />
               <Text style={styles.link_text}>Cuentas</Text>
             </TouchableOpacity>
@@ -27,13 +27,13 @@ export default class MenuOptions extends React.Component {
               <Image source={require('../images/avatar.png')} style={styles.icon_link} />
               <Text style={styles.link_text}>Clientes</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.link_navigation} onPress={() => this.props.navigation.navigate('Messages')}>
+            <TouchableOpacity style={styles.link_navigation} onPress={() => this.props.navigation.navigate('ViewClient')}>
               <Image source={require('../images/envelope.png')} style={styles.icon_link} />
               <Text style={styles.link_text}>Mensajes</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.panel_configuration}>
-            <TouchableOpacity style={styles.link_navigation} onPress={() => this.route('')}>
+            <TouchableOpacity style={styles.link_navigation} onPress={() => this.props.navigation.navigate('Accounting')}>
               <Image source={require('../images/settings.png')} style={styles.icon_link} />
               <Text style={styles.link_text}>Configuraciones</Text>
             </TouchableOpacity>

@@ -14,6 +14,8 @@ import AddClient from "../screens/AddClient";
 import Clients from '../screens/Clients';
 import Accounting from '../screens/Accounting';
 import Messages from '../screens/Messages';
+import ViewClient from '../screens/ViewClient';
+import Balances from '../screens/Balances';
 import MenuOptions from "./MenuOptions";
 
 const WIDTH = Dimensions.get('window').width;
@@ -32,16 +34,26 @@ const TabClients = createMaterialTopTabNavigator(
       activeTintColor: '#333',
       inactiveTintColor: '#d3d3d3',
       style: {
-        backgroundColor: '#ffffff',
+        backgroundColor: '#f7f7f7',
         overflow:'hidden',
+        shadowOpacity: 0,
+        elevation:0,  
       },
       labelStyle: {
         textAlign: 'center',
+        fontFamily:'Poppins',
       },
       indicatorStyle: {
+        marginLeft:30,
+        marginRight:30,
+        width:60,
         borderBottomColor: '#7EE393',
         borderBottomWidth: 2,
       },
+      tabStyle: {
+         //width:500,
+         
+      }
     },
   }
 );
@@ -70,6 +82,10 @@ const TabAccounting = createMaterialTopTabNavigator(
         borderBottomColor: '#7EE393',
         borderBottomWidth: 2,
       },
+
+      tabStyle: {
+         
+      }
     },
   }
 );
@@ -81,55 +97,62 @@ const RootStack = createStackNavigator(
           title:'Inicio',
           headerLeft: (
             <ButtonMenu navigation={navigation}/>
-            )
-        })
-    },
-    Accounting: {
-      screen: TabAccounting,
-      navigationOptions: ({navigation}) => ({
-          title:'Contabilidad',
-          headerLeft: (
-            <ButtonMenu navigation={navigation}/>
-            )
-        })
-    },
-    AddClient: {
-      screen: AddClient,
-      navigationOptions: ({navigation}) => ({
-          title:'Clientes',
-          headerLeft: (
-            <ButtonBack navigation={navigation}/>
-          ),
-          headerStyle: {
-            backgroundColor:'#ffbd3e',
-          },
-          headerTitleStyle: {
-            color:'#ffffff',
-          },
-        })
-    },
-    Clients: {
-      screen: TabClients,
-      navigationOptions: ({navigation}) => ({
-          title:'Clientes',
-          headerLeft: (
-            <ButtonMenu navigation={navigation}/>
             ),
-          headerRight: (
-            <SearchButton navigation={navigation} color='#838383'/>
-          ),
+          headerTitleStyle: {
+            fontFamily: "Poppins",
+          }
         })
     },
 
-    Messages: {
-      screen: Messages,
+    Clients: {
+      screen:TabClients,
       navigationOptions: ({navigation}) => ({
-          title:'Bandeja de Entrada',
-          headerLeft: (
-            <ButtonMenu navigation={navigation}/>
-            )
-        })
+        title:'Clients',
+        headerLeft: (
+          <ButtonMenu navigation={navigation}/>
+        ),
+        headerTitleStyle: {
+            fontFamily: "Poppins",
+        }
+      })
     },
+    
+    ViewClient: {
+      screen:ViewClient,
+      navigationOptions: ({navigation}) => ({
+        title:'Saldos del cliente',
+        headerLeft: (
+          <ButtonMenu navigation={navigation}/>
+        ),
+        headerTitleStyle: {
+          fontFamily: "Poppins",
+        }
+      })
+    },
+    Balances: {
+      screen:Balances,
+      navigationOptions: ({navigation}) => ({
+        title:'Saldos pendientes',
+        headerLeft: (
+          <ButtonMenu navigation={navigation}/>
+        ),
+        headerTitleStyle: {
+          fontFamily: "Poppins",
+        }
+      })
+    },
+   Accounting: {
+     screen:TabAccounting,
+      navigationOptions: ({navigation}) => ({
+        title:'Contabilidad',
+        headerLeft: (
+          <ButtonMenu navigation={navigation}/>
+        ),
+        headerTitleStyle: {
+          fontFamily: "Poppins",
+        }
+      })
+   },
 
   },
 
@@ -149,18 +172,15 @@ const DrawerNavigator = createDrawerNavigator(
     Home: {
       screen:RootStack,
     },
-    Accounting:{
-      screen:Accounting,
+    Clients: {
+       screen:Clients,
     },
-    AddClient:{
-        screen:AddClient,
+    ViewClient: {
+      screen: ViewClient,
     },
-    Clients:{
-      screen:Clients,
+    Balances: {
+      screen:Balances,
     },
-    Messages:{
-      screen:Messages,
-    }
 
   },
 
