@@ -1,14 +1,13 @@
 import React from 'react';
 import { Text, View ,Dimensions, TouchableOpacity, Image, TextInput } from 'react-native';
 import styles from '../styles/styles_template';
-import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
 export default class Home extends React.Component{
-  
+
   constructor(props){
     super(props);
 
@@ -20,16 +19,9 @@ export default class Home extends React.Component{
       showing:false,
       expand:true,
       nameicon:'md-arrow-up',
-      nameorder:'ASCENDETE'
+      nameorder:'ASCENDENTE'
     };
     this._count_ = 0;
-  }
-
-  componentDidMount() {
-    Font.loadAsync({
-      'Poppins': require('../assets/fonts/Poppins/Poppins-Light.ttf'),
-      'Poppins-Bold': require('../assets/fonts/Poppins/Poppins-Bold.ttf'),
-    }).then( () => this.setState( { fontsLoaded: true, poppins:'Poppins', poppinsBold:'Poppins-Bold' } ) );
   }
 
   onchangetext(text){
@@ -39,30 +31,27 @@ export default class Home extends React.Component{
     }else{
       this.setState({value:text,showing:false,expand:true});
     }
-    
+
   }
   changeOrder(){
     if(this._count_ == 0){
-      this.setState({nameicon:'md-arrow-down',nameorder:'DESCENDETE'});
+      this.setState({nameicon:'md-arrow-down',nameorder:'DESCENDENTE'});
       this._count_ = 1;
     }else{
-      this.setState({nameicon:'md-arrow-up',nameorder:'ASCENDETE'});
+      this.setState({nameicon:'md-arrow-up',nameorder:'ASCENDENTE'});
       this._count_ = 0;
     }
   }
 
   render(){
     const { fontsLoaded, poppins, poppinsBold, value, showing, expand, nameicon, nameorder } = this.state;
-
-    if(fontsLoaded){
       return(
         <View style={styles.container}>
-             
              <View style={styles.body_}>
                <View style={styles.headerTitle}>
-                  <Text style={[styles.textlight,{fontSize:12},{fontFamily:poppins,}]}>TODOS</Text>
+                  <Text style={[styles.textlight,{fontSize:12},{fontFamily:"Poppins",}]}>TODOS</Text>
                   <TouchableOpacity style={styles.buttonorder} onPress={() => this.changeOrder()}>
-                    <Text style={[styles.textlight,{fontSize:12},{fontFamily:poppins,}]}>{nameorder}</Text>
+                    <Text style={[styles.textlight,{fontSize:12},{fontFamily:"Poppins",}]}>{nameorder}</Text>
                     <Ionicons
                       name={nameicon}
                       color="#a4a6ac"
@@ -74,7 +63,7 @@ export default class Home extends React.Component{
                <View style={[styles.bar_show_state_,styles.search_bar]}>
                  <Ionicons name="md-search" size={30} color="#a4a6ac" style={{top:1,}}/>
                  <TextInput
-                    style={[styles.inputSearch,styles.textsearch,{fontFamily:poppins,},expand ? styles.inputExpand : '']}
+                    style={[styles.inputSearch,styles.textsearch,{fontFamily:"Poppins",},expand ? styles.inputExpand : '']}
                     onChangeText={text => this.onchangetext(text)}
                     value={value}
                     placeholder="Buscas algo?"
@@ -86,76 +75,66 @@ export default class Home extends React.Component{
                <View style={[styles.box_information,styles.expand_box_information]}>
                  <View style={{flexDirection:'row'}}>
                    <View style={[styles.circle,styles.bgroundPurpple]}></View>
-                   <Text style={[styles.title,{fontFamily:poppinsBold,}]}>Jhon Denver Murillo Mendez</Text>
+                   <Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Jhon Denver Murillo Mendez</Text>
                  </View>
-                 <Text style={[styles.textlight,{fontFamily:poppins,}]}>(+57) 3117222333</Text>
-                 <Text style={[styles.textlight,{fontFamily:poppins,}]}>Jhon es un cliente que le gusta hacer compras constantemente de jeans</Text>
+                 <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>(+57) 3117222333</Text>
+                 <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Jhon es un cliente que le gusta hacer compras constantemente de jeans</Text>
                  <View style={styles.btnGroup}>
                    <TouchableOpacity style={styles.btngray}>
-                     <Text style={[styles.textlight,{fontFamily:poppins,}]}>Editar</Text>
-                   </TouchableOpacity> 
+                     <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Editar</Text>
+                   </TouchableOpacity>
                    <TouchableOpacity style={styles.btnwgray}>
-                     <Text style={[styles.textlight,{fontFamily:poppins,}]}>Eliminar</Text>
-                   </TouchableOpacity> 
+                     <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Eliminar</Text>
+                   </TouchableOpacity>
                  </View>
                  <TouchableOpacity style={styles.btnfavorites}>
                     <Ionicons name="md-star" color="#a4a6ac" size={22} />
                  </TouchableOpacity>
-                 <Text style={[styles.textdate,{fontFamily:poppins,}]}>09/01/2019</Text>
+                 <Text style={[styles.textdate,{fontFamily:"Poppins",}]}>09/01/2019</Text>
                </View>
                <View style={[styles.box_information,styles.expand_box_information]}>
                  <View style={{flexDirection:'row'}}>
                    <View style={[styles.circle,styles.bgroundGreen]}></View>
-                   <Text style={[styles.title,{fontFamily:poppinsBold,}]}>Jhon Denver Murillo Mendez</Text>
+                   <Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Jhon Denver Murillo Mendez</Text>
                  </View>
-                 <Text style={[styles.textlight,{fontFamily:poppins,}]}>(+57) 3117222333</Text>
-                 <Text style={[styles.textlight,{fontFamily:poppins,}]}>Jhon es un cliente que le gusta hacer compras constantemente de jeans</Text>
+                 <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>(+57) 3117222333</Text>
+                 <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Jhon es un cliente que le gusta hacer compras constantemente de jeans</Text>
                  <View style={styles.btnGroup}>
                    <TouchableOpacity style={styles.btngray}>
-                     <Text style={[styles.textlight,{fontFamily:poppins,}]}>Editar</Text>
-                   </TouchableOpacity> 
+                     <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Editar</Text>
+                   </TouchableOpacity>
                    <TouchableOpacity style={styles.btnwgray}>
-                     <Text style={[styles.textlight,{fontFamily:poppins,}]}>Eliminar</Text>
-                   </TouchableOpacity> 
+                     <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Eliminar</Text>
+                   </TouchableOpacity>
                  </View>
                  <TouchableOpacity style={styles.btnfavorites}>
                     <Ionicons name="md-star" color="#a4a6ac" size={22} />
                  </TouchableOpacity>
-                 <Text style={[styles.textdate,{fontFamily:poppins,}]}>09/01/2019</Text>
+                 <Text style={[styles.textdate,{fontFamily:"Poppins",}]}>09/01/2019</Text>
                </View>
                <View style={[styles.box_information,styles.expand_box_information]}>
                  <View style={{flexDirection:'row'}}>
                    <View style={[styles.circle,styles.bgroundYellow]}></View>
-                   <Text style={[styles.title,{fontFamily:poppinsBold,}]}>Jhon Denver Murillo Mendez</Text>
+                   <Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Jhon Denver Murillo Mendez</Text>
                  </View>
-                 <Text style={[styles.textlight,{fontFamily:poppins,}]}>(+57) 3117222333</Text>
-                 <Text style={[styles.textlight,{fontFamily:poppins,}]}>Jhon es un cliente que le gusta hacer compras constantemente de jeans</Text>
+                 <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>(+57) 3117222333</Text>
+                 <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Jhon es un cliente que le gusta hacer compras constantemente de jeans</Text>
                  <View style={styles.btnGroup}>
                    <TouchableOpacity style={styles.btngray}>
-                     <Text style={[styles.textlight,{fontFamily:poppins,}]}>Editar</Text>
-                   </TouchableOpacity> 
+                     <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Editar</Text>
+                   </TouchableOpacity>
                    <TouchableOpacity style={styles.btnwgray}>
-                     <Text style={[styles.textlight,{fontFamily:poppins,}]}>Eliminar</Text>
-                   </TouchableOpacity> 
+                     <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Eliminar</Text>
+                   </TouchableOpacity>
                  </View>
                  <TouchableOpacity style={styles.btnfavorites}>
                     <Ionicons name="md-star" color="#a4a6ac" size={22} />
                  </TouchableOpacity>
-                 <Text style={[styles.textdate,{fontFamily:poppins,}]}>09/01/2019</Text>
+                 <Text style={[styles.textdate,{fontFamily:"Poppins",}]}>09/01/2019</Text>
                </View>
              </View>
 
         </View>
       );
-    }else{
-      return(
-        <View style={styles.container}>
-             <View style={styles.content_title}>
-                <Text style={styles.title}>Acceso rapido</Text>
-             </View>
-        </View>
-      );
-    }
   }
 }
-

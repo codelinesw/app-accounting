@@ -37,12 +37,12 @@ export default class MenuOptions extends React.Component {
               <Image source={require('../images/settings.png')} style={styles.icon_link} />
               <Text style={styles.link_text}>Configuraciones</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.link_navigation} onPress={() => this.route('')}>
+            <TouchableOpacity style={styles.link_navigation} onPress={() => this.props.navigation.navigate('AddClient')}>
               <Image source={require('../images/logout.png')} style={styles.icon_link} />
               <Text style={styles.link_text}>Salir</Text>
             </TouchableOpacity>
           </View>
-          </View> 
+          </View>
       )
   }
 	render(){
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   user_current:{
   	width:18,
   	height:18,
-  	
+
   },
 
   link_navigation:{

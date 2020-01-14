@@ -9,7 +9,7 @@ const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
 export default class Home extends React.Component{
-  
+
   constructor(props){
     super(props);
 
@@ -25,14 +25,6 @@ export default class Home extends React.Component{
     };
     this._count_ = 0;
   }
-
-  componentDidMount() {
-    Font.loadAsync({
-      'Poppins': require('../assets/fonts/Poppins/Poppins-Light.ttf'),
-      'Poppins-Bold': require('../assets/fonts/Poppins/Poppins-Bold.ttf'),
-    }).then( () => this.setState( { fontsLoaded: true, poppins:'Poppins', poppinsBold:'Poppins-Bold' } ) );
-  }
-
   onchangetext(text){
     let lenghtText = text.toString();
     if(lenghtText.length > 0){
@@ -40,7 +32,7 @@ export default class Home extends React.Component{
     }else{
       this.setState({value:text,showing:false,expand:true});
     }
-    
+
   }
   changeOrder(){
     if(this._count_ == 0){
@@ -55,10 +47,9 @@ export default class Home extends React.Component{
   render(){
     const { fontsLoaded, poppins, poppinsBold, value, showing, expand, nameicon, nameorder } = this.state;
 
-    if(fontsLoaded){
       return(
         <View style={styles.container}>
-             
+
              <View style={styles.body_}>
                <View style={styles.container_pie_chart}>
                    <View style={[styles.panel_left,styles.left_middle_more]}>
@@ -72,11 +63,11 @@ export default class Home extends React.Component{
                    <View style={[styles.panel_right,styles.right_middle_more]}>
                       <View style={{flexDirection:'row'}}>
                          <View style={[styles.circle,styles.bgroundDark]}></View>
-                         <Text style={[styles.textlight,{fontFamily:poppins,fontSize:13,marginRight:40,}]}>Inversion</Text>
+                         <Text style={[styles.textlight,{fontFamily:"Poppins",fontSize:13,marginRight:40,}]}>Inversion</Text>
                        </View>
                       <View style={{flexDirection:'row'}}>
                          <View style={[styles.circle,styles.bgroundGreen]}></View>
-                         <Text style={[styles.textlight,{fontFamily:poppins,fontSize:13,marginRight:43,}]}>Ingresos</Text>
+                         <Text style={[styles.textlight,{fontFamily:"Poppins",fontSize:13,marginRight:43,}]}>Ingresos</Text>
                        </View>
                    </View>
                </View>
@@ -84,7 +75,7 @@ export default class Home extends React.Component{
                    <View style={[styles.bar_show_state_,styles.search_bar,{top:10,}]}>
                      <Ionicons name="md-search" size={30} color="#a4a6ac" style={{top:1,}}/>
                      <TextInput
-                        style={[styles.inputSearch,styles.textsearch,{fontFamily:poppins,},expand ? styles.inputExpand : '']}
+                        style={[styles.inputSearch,styles.textsearch,{fontFamily:"Poppins",},expand ? styles.inputExpand : '']}
                         onChangeText={text => this.onchangetext(text)}
                         value={value}
                         placeholder="Buscas algo?"
@@ -96,22 +87,22 @@ export default class Home extends React.Component{
                    <View style={[styles.btnGroup,styles.extandar_width]}>
                      <TouchableOpacity style={[styles.btnwgray,{flexDirection:'row'}]}>
                        <FontAwesome name="sliders" size={20} style={{ color: '#a4a6ac', marginLeft:2, }} />
-                       <Text style={[styles.textlight,{fontFamily:poppins,}]}>Filtrar</Text>
+                       <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Filtrar</Text>
                      </TouchableOpacity>
                      <TouchableOpacity style={[styles.btnwgray,{flexDirection:'column'}]}>
-                       <Text style={[styles.textlight,{position:'relative',top:-2,right:5,fontFamily:poppins, fontSize:10,}]}>Desde</Text>
-                       <Text style={[styles.title,{position:'relative',top:-6,right:6,fontFamily:poppins,fontSize:11,}]}>11 Ene 2020</Text>
+                       <Text style={[styles.textlight,{position:'relative',top:-2,right:5,fontFamily:"Poppins", fontSize:10,}]}>Desde</Text>
+                       <Text style={[styles.title,{position:'relative',top:-6,right:6,fontFamily:"Poppins",fontSize:11,}]}>11 Ene 2020</Text>
                      </TouchableOpacity>
                      <TouchableOpacity style={[styles.btnwgray,{flexDirection:'column'}]}>
-                       <Text style={[styles.textlight,{position:'relative',top:-2,right:5,fontFamily:poppins, fontSize:10,}]}>Hasta</Text>
-                       <Text style={[styles.title,{position:'relative',top:-6,right:6,fontFamily:poppins,fontSize:11,}]}>11 Ene 2020</Text>
-                     </TouchableOpacity> 
+                       <Text style={[styles.textlight,{position:'relative',top:-2,right:5,fontFamily:"Poppins", fontSize:10,}]}>Hasta</Text>
+                       <Text style={[styles.title,{position:'relative',top:-6,right:6,fontFamily:"Poppins",fontSize:11,}]}>11 Ene 2020</Text>
+                     </TouchableOpacity>
                    </View>
                </View>
                <View style={styles.headerTitle}>
-                  <Text style={[styles.textlight,{fontSize:12},{fontFamily:poppins,}]}>DETALLES DE LOS INGRESOS</Text>
+                  <Text style={[styles.textlight,{fontSize:12},{fontFamily:"Poppins",}]}>DETALLES DE LOS INGRESOS</Text>
                   <TouchableOpacity style={styles.buttonorder} onPress={() => this.changeOrder()}>
-                    <Text style={[styles.textlight,{fontSize:12},{fontFamily:poppins,}]}>{nameorder}</Text>
+                    <Text style={[styles.textlight,{fontSize:12},{fontFamily:"Poppins",}]}>{nameorder}</Text>
                     <Ionicons
                       name={nameicon}
                       color="#a4a6ac"
@@ -124,49 +115,49 @@ export default class Home extends React.Component{
                    <View style={[styles.container_divider,styles.container_divider_white]}>
                      <View style={styles.panel_left}>
                        <View style={[styles.avatar,styles.bgroundGreen]}>
-                         <Text style={[styles.textwhite,styles.fontsizeDate,{fontFamily:poppinsBold}]}>01</Text>
-                         <Text style={[styles.textwhite,{fontFamily:poppins},styles.text_day_week_]}>Sabado</Text>
+                         <Text style={[styles.textwhite,styles.fontsizeDate,{fontFamily:"Poppins-Bold"}]}>01</Text>
+                         <Text style={[styles.textwhite,{fontFamily:"Poppins"},styles.text_day_week_]}>Sabado</Text>
                        </View>
                      </View>
                      <View style={styles.panel_right}>
-                       <Text style={[styles.title,{fontFamily:poppinsBold,fontSize:12,marginTop:9,}]}>Venta</Text>
-                       <Text style={[styles.textlight,{fontFamily:poppins,fontSize:11,}]}>Se vendio 2 Jeans importados</Text>
+                       <Text style={[styles.title,{fontFamily:"Poppins-Bold",fontSize:12,marginTop:9,}]}>Venta</Text>
+                       <Text style={[styles.textlight,{fontFamily:"Poppins",fontSize:11,}]}>Se vendio 2 Jeans importados</Text>
                        <View style={{flexDirection:'row'}}>
-                         <Text style={[styles.text,{fontFamily:poppins,fontSize:12,}]}>01/02/2020</Text>
+                         <Text style={[styles.text,{fontFamily:"Poppins",fontSize:12,}]}>01/02/2020</Text>
                        </View>
-                       <Text style={[{fontFamily:poppinsBold},styles.bottomRight]}>$70.000</Text>
+                       <Text style={[{fontFamily:"Poppins-Bold"},styles.bottomRight]}>$70.000</Text>
                      </View>
                    </View>
                    <View style={[styles.container_divider,styles.container_divider_white]}>
                      <View style={styles.panel_left}>
                        <View style={[styles.avatar,styles.bgroundGreen]}>
-                         <Text style={[styles.textwhite,styles.fontsizeDate,{fontFamily:poppinsBold}]}>13</Text>
-                         <Text style={[styles.textwhite,{fontFamily:poppins},styles.text_day_week_]}>Jueves</Text>
+                         <Text style={[styles.textwhite,styles.fontsizeDate,{fontFamily:"Poppins-Bold"}]}>13</Text>
+                         <Text style={[styles.textwhite,{fontFamily:"Poppins"},styles.text_day_week_]}>Jueves</Text>
                        </View>
                      </View>
                      <View style={styles.panel_right}>
-                       <Text style={[styles.title,{fontFamily:poppinsBold,fontSize:12,marginTop:9,}]}>Venta</Text>
-                       <Text style={[styles.textlight,{fontFamily:poppins,fontSize:11,}]}>Se vendio 2 Jeans importados</Text>
+                       <Text style={[styles.title,{fontFamily:"Poppins-Bold",fontSize:12,marginTop:9,}]}>Venta</Text>
+                       <Text style={[styles.textlight,{fontFamily:"Poppins",fontSize:11,}]}>Se vendio 2 Jeans importados</Text>
                        <View style={{flexDirection:'row'}}>
-                         <Text style={[styles.text,{fontFamily:poppins,fontSize:12,}]}>13/02/2020</Text>
+                         <Text style={[styles.text,{fontFamily:"Poppins",fontSize:12,}]}>13/02/2020</Text>
                        </View>
-                       <Text style={[{fontFamily:poppinsBold},styles.bottomRight]}>$50.000</Text>
+                       <Text style={[{fontFamily:"Poppins-Bold"},styles.bottomRight]}>$50.000</Text>
                      </View>
                    </View>
                    <View style={[styles.container_divider,styles.container_divider_white]}>
                      <View style={styles.panel_left}>
                        <View style={[styles.avatar,styles.bgroundGreen]}>
-                         <Text style={[styles.textwhite,styles.fontsizeDate,{fontFamily:poppinsBold}]}>15</Text>
-                         <Text style={[styles.textwhite,{fontFamily:poppins},styles.text_day_week_]}>Sabado</Text>
+                         <Text style={[styles.textwhite,styles.fontsizeDate,{fontFamily:"Poppins-Bold"}]}>15</Text>
+                         <Text style={[styles.textwhite,{fontFamily:"Poppins"},styles.text_day_week_]}>Sabado</Text>
                        </View>
                      </View>
                      <View style={styles.panel_right}>
-                       <Text style={[styles.title,{fontFamily:poppinsBold,fontSize:12,marginTop:9,}]}>Venta</Text>
-                       <Text style={[styles.textlight,{fontFamily:poppins,fontSize:11,}]}>Se vendio 2 Jeans importados</Text>
+                       <Text style={[styles.title,{fontFamily:"Poppins-Bold",fontSize:12,marginTop:9,}]}>Venta</Text>
+                       <Text style={[styles.textlight,{fontFamily:"Poppins",fontSize:11,}]}>Se vendio 2 Jeans importados</Text>
                        <View style={{flexDirection:'row'}}>
-                         <Text style={[styles.text,{fontFamily:poppins,fontSize:12,}]}>15/02/2020</Text>
+                         <Text style={[styles.text,{fontFamily:"Poppins",fontSize:12,}]}>15/02/2020</Text>
                        </View>
-                       <Text style={[{fontFamily:poppinsBold},styles.bottomRight]}>$30.000</Text>
+                       <Text style={[{fontFamily:"Poppins-Bold"},styles.bottomRight]}>$30.000</Text>
                      </View>
                    </View>
                </View>
@@ -174,15 +165,5 @@ export default class Home extends React.Component{
 
         </View>
       );
-    }else{
-      return(
-        <View style={styles.container}>
-             <View style={styles.content_title}>
-                <Text style={styles.title}>Acceso rapido</Text>
-             </View>
-        </View>
-      );
-    }
   }
 }
-

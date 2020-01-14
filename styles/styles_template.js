@@ -116,12 +116,12 @@ const styles = StyleSheet.create({
     height:150,
     backgroundColor:white,
     borderRadius:6,
-    shadowOffset: {width: 13, height: 13}, 
+    shadowOffset: {width: 13, height: 13},
     shadowRadius: 16.00,
     // android (Android +5.0)
     shadowColor:'red',
     shadowOpacity: 0.010,
-    elevation:4,	
+    elevation:4,
   },
 
   expand_box_information: {
@@ -182,6 +182,22 @@ const styles = StyleSheet.create({
   	marginRight:8,
   },
 
+  btnExpand: {
+  	position:'relative',
+  	width:(WIDTH-35),
+    height:45,
+  	padding:5,
+  	borderRadius:6,
+  	color:dark,
+  	marginRight:8,
+    justifyContent:'center',
+    alignItems:'center',
+  },
+
+  btngreen:{
+    backgroundColor:bgGreen,
+  },
+
   btnwgray: {
   	position:'relative',
   	padding:5,
@@ -193,13 +209,32 @@ const styles = StyleSheet.create({
   	color:dark,
   },
 
+  btnModal: {
+  	position:'relative',
+    top:3,
+    width:(WIDTH-200),
+    height:35,
+  	padding:5,
+    paddingLeft:8,
+  	paddingRight:12,
+  	borderBottomLeftRadius:6,
+    borderBottomRightRadius:6,
+  	color:dark,
+  },
+
+  btnTopradius: {
+    paddingLeft:8,
+    borderTopLeftRadius:6,
+    borderTopRightRadius:6,
+  },
+
   btnfavorites: {
   	position:'absolute',
   	right:10,
   	top:5,
   	color:darklight,
   	padding:5,
-  	
+
   },
 
   btndeletetext:{
@@ -242,7 +277,7 @@ const styles = StyleSheet.create({
     backgroundColor:white,
     backgroundColor:white,
     borderRadius:6,
-    shadowOffset: {width: 13, height: 13}, 
+    shadowOffset: {width: 13, height: 13},
     shadowRadius: 16.00,
     // android (Android +5.0)
     shadowColor:'red',
@@ -257,7 +292,7 @@ const styles = StyleSheet.create({
     height:45,
     marginBottom:15,
     borderRadius:3,
-    shadowOffset: {width: 13, height: 13}, 
+    shadowOffset: {width: 13, height: 13},
     shadowRadius: 16.00,
     // android (Android +5.0)
     shadowColor:'red',
@@ -324,7 +359,7 @@ const styles = StyleSheet.create({
     height:200,
     backgroundColor:white,
     borderRadius:3,
-    shadowOffset: {width: 13, height: 13}, 
+    shadowOffset: {width: 13, height: 13},
     shadowRadius: 16.00,
     // android (Android +5.0)
     shadowColor:'red',
@@ -347,6 +382,51 @@ const styles = StyleSheet.create({
     height:200,
     alignItems:'center',
     justifyContent:'center',
+  },
+
+  //styles for modal window
+  containerModal : {
+    width:WIDTH,
+    height:HEIGHT,
+    backgroundColor:'rgba(0,0,0,0.2)',
+    justifyContent:'center',
+    alignItems:'center',
+  },
+
+  containerOptions: {
+    position:'relative',
+    width:(WIDTH-200),
+    height:75,
+    backgroundColor:white,
+    borderRadius:6,
+  },
+
+  //styles for input
+  input_group: {
+    position:'relative',
+    width:(WIDTH-35),
+    right:8,
+    resizeMode:'contain',
+    margin:'auto',
+    marginBottom:10,
+    flexDirection:'row',
+  },
+
+  input_text: {
+    position:'relative',
+    width:(WIDTH-35),
+    height:47,
+    padding:10,
+    paddingLeft:32,
+    borderWidth:2,
+    borderColor:bgGreen,
+    borderRadius:6,
+  },
+  iconInput: {
+    position:'absolute',
+    left:18,
+    top:12,
+    color: '#59f090',
   },
 });
 

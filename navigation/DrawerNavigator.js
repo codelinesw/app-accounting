@@ -37,7 +37,7 @@ const TabClients = createMaterialTopTabNavigator(
         backgroundColor: '#f7f7f7',
         overflow:'hidden',
         shadowOpacity: 0,
-        elevation:0,  
+        elevation:0,
       },
       labelStyle: {
         textAlign: 'center',
@@ -52,7 +52,7 @@ const TabClients = createMaterialTopTabNavigator(
       },
       tabStyle: {
          //width:500,
-         
+
       }
     },
   }
@@ -84,7 +84,7 @@ const TabAccounting = createMaterialTopTabNavigator(
       },
 
       tabStyle: {
-         
+
       }
     },
   }
@@ -104,6 +104,9 @@ const RootStack = createStackNavigator(
         })
     },
 
+    AddClient: {
+      screen:AddClient,
+    },
     Clients: {
       screen:TabClients,
       navigationOptions: ({navigation}) => ({
@@ -116,7 +119,7 @@ const RootStack = createStackNavigator(
         }
       })
     },
-    
+
     ViewClient: {
       screen:ViewClient,
       navigationOptions: ({navigation}) => ({
@@ -172,6 +175,9 @@ const DrawerNavigator = createDrawerNavigator(
     Home: {
       screen:RootStack,
     },
+    AddClient: {
+      screen:AddClient,
+    },
     Clients: {
        screen:Clients,
     },
@@ -191,7 +197,7 @@ const styles = StyleSheet.create({
   avatar_red:{
     backgroundColor:'#F75C3B',
   },
-  
+
   avatar_green: {
     backgroundColor:'#78e88d',
   },
