@@ -35,10 +35,11 @@ export default class Home extends React.Component{
 		const { fontsLoaded, poppins, poppinsBold, value, showing, expand } = this.state;
       return(
         <View style={styles.container}>
-             <View style={styles.content_title}>
-               <Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Acceso rapido</Text>
+             <View style={[styles.headerTitle,styles.headerColumn]}>
+               <Text style={[styles.title,{fontFamily:"Poppins-Bold",textAlign:'center',fontSize:20,marginTop:12,}]}>Bienvenido a AppBalance</Text>
+               <Text style={[styles.textlight,{fontFamily:"Poppins",textAlign:'center',fontSize:14,}]}>Atraves de estos paneles puedes acceder rapidamente a cada uno de esos modulos</Text>
              </View>
-             <View style={[styles.container_divider,styles.container_divider_white]}>
+             {/*<View style={[styles.container_divider,styles.container_divider_white]}>
                <View style={styles.panel_left}>
                  <Image source={require('../images/user.png')} style={styles.avatar} />
                </View>
@@ -53,9 +54,9 @@ export default class Home extends React.Component{
                     <Ionicons name="md-star" color="#a4a6ac" size={22} />
                  </TouchableOpacity>
                </View>
-             </View>
+             </View>*/}
              <View style={styles.body_}>
-               <Text style={[styles.title,{fontFamily:"Poppins",}]}>Acceso rapido</Text>
+               {/*<Text style={[styles.title,{fontFamily:"Poppins",}]}>Acceso rapido</Text>
                <View style={[styles.bar_show_state_,styles.search_bar]}>
                  <Ionicons name="md-search" size={30} color="#a4a6ac" style={{top:1,}}/>
                  <TextInput
@@ -110,7 +111,27 @@ export default class Home extends React.Component{
                     <Ionicons name="md-star" color="#a4a6ac" size={22} />
                  </TouchableOpacity>
                  <Text style={[styles.textdate,{fontFamily:"Poppins",}]}>09/01/2019</Text>
-               </View>
+               </View>*/}
+               <View style={styles.content_card}>
+                    <TouchableOpacity style={[styles.card,styles.bgroundPurpple]} onPress={() => this.props.navigation.navigate('Accounting')}>
+                      <View style={styles.circle_image}>
+                        <Image source={require('../images/PNG/001-taxes.png')} style={styles.image_card} />
+                      </View>
+                      <Text style={[styles.title,{fontFamily:'Poppins-Bold',top:20,color:'white',}]}>Mis Cuentas</Text>
+                    </TouchableOpacity> 
+                    <TouchableOpacity style={[styles.card,styles.bgroundYellow]} onPress={() => this.props.navigation.navigate('Clients')}>
+                    <View style={styles.circle_image}><Image source={require('../images/PNG/002-target.png')} style={styles.image_card} /></View>
+                    <Text style={[styles.title,{fontFamily:'Poppins-Bold',top:20,color:'white',}]}>Mis Clientes</Text>
+                   </TouchableOpacity>
+                   <TouchableOpacity style={[styles.card,styles.bgroundGreen]} onPress={() => this.props.navigation.navigate('Balances')}>
+                      <View style={styles.circle_image}><Image source={require('../images/PNG/003-paper-plane.png')} style={styles.image_card} /></View>
+                      <Text style={[styles.title,{fontFamily:'Poppins-Bold',top:20,color:'white',}]}>Saldos Pendientes</Text>
+                   </TouchableOpacity>
+                   <TouchableOpacity style={[styles.card,styles.bgroundBlue]}>
+                      <View style={styles.circle_image}><Image source={require('../images/PNG/004-shopping-bag.png')} style={styles.image_card} /></View>
+                      <Text style={[styles.title,{fontFamily:'Poppins-Bold',top:20,color:'white',}]}>Mis Compras</Text>
+                   </TouchableOpacity>
+              </View>
              </View>
 
         </View>

@@ -51,6 +51,14 @@ const styles = StyleSheet.create({
     paddingRight:10,
   },
 
+  headerColumn: {
+    height:89,
+    flexDirection:'column',
+    justifyContent:'center',
+    alignItems:'center',
+    marginBottom:25,
+  },
+
   //container all items of body
   body_: {
   	width:WIDTH,
@@ -427,6 +435,123 @@ const styles = StyleSheet.create({
     left:18,
     top:12,
     color: '#59f090',
+  },
+  //styles for panel layout left
+  container_menu: {
+    width:(WIDTH-62),
+    //height:686
+    height:HEIGHT,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  panel_top:{
+    position:'relative',
+    top:30,
+    width:(WIDTH-62),
+    height:(HEIGHT-580),
+    borderBottomColor: '#f3f3f6',
+    borderBottomWidth: 2,
+    flex:1,
+    justifyContent:'center',
+
+  },
+  panel_body:{
+    position:'relative',
+    top:40,
+    width:(WIDTH-60),
+    height:265,
+    borderBottomColor: '#f3f3f6',
+    borderBottomWidth: 2,
+    marginBottom:20,
+  },
+  
+  panel_configuration: {
+    top:25,
+    width: (WIDTH-60),
+    height: 310,
+  },
+  link_navigation:{
+    padding:6,
+    fontSize:26,
+    paddingLeft:14,
+    margin:6,
+    textAlign:'left',
+    flexDirection:'row',
+  },
+
+  icon_link: {
+    width:25,
+    height:25,
+  },
+
+  link_text:{
+    top:1,
+    marginLeft:10,
+    color:'#737373',
+    fontWeight: 'bold',
+    fontSize:16,
+  },
+
+  //styles for card to home
+  content_card: {
+    width:WIDTH,
+    height:520,
+    flexDirection:'row',
+    flexWrap:'wrap',
+    justifyContent:'center',
+  },
+
+  card: {
+    top:0,
+    left:10,
+    width:150,
+    height:160,
+    backgroundColor:'#ffffff',
+    borderRadius:10,
+    marginBottom:25,
+    marginRight:20,
+    backgroundColor: '#03A9F4',
+    alignItems: 'center', 
+    shadowOffset: {width: 13, height: 13}, 
+    shadowOpacity: 0.58,
+    shadowRadius: 16.00,
+
+    // android (Android +5.0)
+    shadowColor:'red',
+    elevation: 24,
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+  
+  },
+  circle_image:{
+    marginHorizontal: 'auto',
+    marginLeft:35,
+    marginRight:35,
+    marginTop:20,
+    width:75,
+    height:75,
+    borderRadius:100,
+    backgroundColor:'#ffffff',
+    alignItems:'center',
+  },
+
+  image_card:{
+    top:14,
+    right:5,
+    marginLeft:6,
+    width:45,
+    height:45,
+    margin:'auto',
+    alignItems:'center',
+  },
+
+  title_text: {
+    color:'#ffffff',
+    right:5,
+    top:20,
+    fontWeight:'bold',
+    alignItems:'center',
   },
 });
 
