@@ -9,12 +9,14 @@ import { createStackNavigator } from 'react-navigation-stack';
 import ButtonBack from "../components/ButtonBack";
 import SearchButton from "../components/SearchButton";
 import ButtonMenu from "../components/ButtonMenu";
+import ButtonAdd from "../components/ButtonAdd";
 import Home from "../screens/Home";
 import AddClient from "../screens/AddClient";
 import Clients from '../screens/Clients';
 import Accounting from '../screens/Accounting';
 import Messages from '../screens/Messages';
 import ViewClient from '../screens/ViewClient';
+import AddBalances from '../screens/AddBalances';
 import Balances from '../screens/Balances';
 import MenuOptions from "./MenuOptions";
 
@@ -110,16 +112,18 @@ const RootStack = createStackNavigator(
     Clients: {
       screen:TabClients,
       navigationOptions: ({navigation}) => ({
-        title:'Clients',
-        headerLeft: (
-          <ButtonMenu navigation={navigation}/>
-        ),
-        headerTitleStyle: {
-            fontFamily: "Poppins",
-        }
+          title:'Clientes',
+          headerLeft: (
+            <ButtonMenu navigation={navigation} />
+          ),
+          headerRight: (
+            <ButtonAdd typeButton="addclients" navigation={navigation} />
+          ),
+          headerTitleStyle: {
+              fontFamily: "Poppins",
+          }
       })
     },
-
     ViewClient: {
       screen:ViewClient,
       navigationOptions: ({navigation}) => ({
@@ -132,12 +136,18 @@ const RootStack = createStackNavigator(
         }
       })
     },
+    AddBalances : {
+      screen: AddBalances,
+    },
     Balances: {
       screen:Balances,
       navigationOptions: ({navigation}) => ({
         title:'Saldos pendientes',
         headerLeft: (
           <ButtonMenu navigation={navigation}/>
+        ),
+        headerRight: (
+          <ButtonAdd typeButton="AddBalances" navigation={navigation} />
         ),
         headerTitleStyle: {
           fontFamily: "Poppins",

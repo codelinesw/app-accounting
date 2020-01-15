@@ -217,6 +217,17 @@ const styles = StyleSheet.create({
   	color:dark,
   },
 
+  btnwgreen: {
+  	position:'relative',
+  	padding:5,
+  	paddingRight:12,
+  	borderRadius:6,
+  	backgroundColor:white,
+  	borderWidth:2,
+  	borderColor:bgGreen,
+  	color:bgGreen,
+  },
+
   btnModal: {
   	position:'relative',
     top:3,
@@ -465,7 +476,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     marginBottom:20,
   },
-  
+
   panel_configuration: {
     top:25,
     width: (WIDTH-60),
@@ -512,8 +523,8 @@ const styles = StyleSheet.create({
     marginBottom:25,
     marginRight:20,
     backgroundColor: '#03A9F4',
-    alignItems: 'center', 
-    shadowOffset: {width: 13, height: 13}, 
+    alignItems: 'center',
+    shadowOffset: {width: 13, height: 13},
     shadowOpacity: 0.58,
     shadowRadius: 16.00,
 
@@ -522,7 +533,7 @@ const styles = StyleSheet.create({
     elevation: 24,
     flexDirection: 'column',
     flexWrap: 'wrap',
-  
+
   },
   circle_image:{
     marginHorizontal: 'auto',

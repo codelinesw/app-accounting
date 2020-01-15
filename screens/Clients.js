@@ -2,11 +2,11 @@ import React from 'react';
 import { Text, View ,Dimensions, TouchableOpacity, Image, TextInput } from 'react-native';
 import styles from '../styles/styles_template';
 import { Ionicons } from '@expo/vector-icons';
-
+import ButtonMenu from "../components/ButtonMenu";
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
-export default class Home extends React.Component{
+export default class Clients extends React.Component{
 
   constructor(props){
     super(props);
@@ -75,7 +75,7 @@ export default class Home extends React.Component{
                <View style={[styles.box_information,styles.expand_box_information]}>
                  <View style={{flexDirection:'row'}}>
                    <View style={[styles.circle,styles.bgroundPurpple]}></View>
-                   <Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Jhon Denver Murillo Mendez</Text>
+                   <TouchableOpacity onPress={() => this.props.navigation.navigate('ViewClient')}><Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Jhon Denver Murillo Mendez</Text></TouchableOpacity>
                  </View>
                  <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>(+57) 3117222333</Text>
                  <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Jhon es un cliente que le gusta hacer compras constantemente de jeans</Text>
@@ -95,7 +95,7 @@ export default class Home extends React.Component{
                <View style={[styles.box_information,styles.expand_box_information]}>
                  <View style={{flexDirection:'row'}}>
                    <View style={[styles.circle,styles.bgroundGreen]}></View>
-                   <Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Jhon Denver Murillo Mendez</Text>
+                   <TouchableOpacity onPress={() => this.props.navigation.navigate('ViewClient')}><Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Jhon Denver Murillo Mendez</Text></TouchableOpacity>
                  </View>
                  <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>(+57) 3117222333</Text>
                  <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Jhon es un cliente que le gusta hacer compras constantemente de jeans</Text>
@@ -115,7 +115,7 @@ export default class Home extends React.Component{
                <View style={[styles.box_information,styles.expand_box_information]}>
                  <View style={{flexDirection:'row'}}>
                    <View style={[styles.circle,styles.bgroundYellow]}></View>
-                   <Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Jhon Denver Murillo Mendez</Text>
+                   <TouchableOpacity onPress={() => this.props.navigation.navigate('ViewClient')}><Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Jhon Denver Murillo Mendez</Text></TouchableOpacity>
                  </View>
                  <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>(+57) 3117222333</Text>
                  <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Jhon es un cliente que le gusta hacer compras constantemente de jeans</Text>
