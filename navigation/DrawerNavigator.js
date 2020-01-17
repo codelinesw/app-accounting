@@ -12,6 +12,7 @@ import ButtonMenu from "../components/ButtonMenu";
 import ButtonAdd from "../components/ButtonAdd";
 import Home from "../screens/Home";
 import AddClient from "../screens/AddClient";
+import AddSales from "../screens/AddSales";
 import Clients from '../screens/Clients';
 import Accounting from '../screens/Accounting';
 import Messages from '../screens/Messages';
@@ -108,6 +109,9 @@ const RootStack = createStackNavigator(
 
     AddClient: {
       screen:AddClient,
+      navigationOptions: ({ navigation }) => ({
+        title:'Agrega un cliente',
+      })
     },
     Clients: {
       screen:TabClients,
@@ -131,6 +135,9 @@ const RootStack = createStackNavigator(
         headerLeft: (
           <ButtonMenu navigation={navigation}/>
         ),
+        headerRight: (
+          <ButtonAdd typeButton="addsales" navigation={navigation} />
+        ),
         headerTitleStyle: {
           fontFamily: "Poppins",
         }
@@ -138,6 +145,9 @@ const RootStack = createStackNavigator(
     },
     AddBalances : {
       screen: AddBalances,
+      navigationOptions: ({ navigation }) => ({
+        title:'Agrega un nuevo Saldo',
+      })
     },
     Balances: {
       screen:Balances,
@@ -167,6 +177,13 @@ const RootStack = createStackNavigator(
       })
    },
 
+   AddSales: {
+     screen:AddSales,
+     navigationOptions: ({ navigation }) => ({
+       title:'Agrega una nueva Venta',
+     })
+   },
+
   },
 
 );
@@ -177,25 +194,51 @@ const DrawerConfig = {
   drawerWidth: WIDTH*0.83,
   contentComponent: ({ navigation }) => {
     return(<MenuOptions navigation={navigation}/>)
-  }
+  },
+  contentOptions: {
+    labelStyle:{
+      fontFamily:'Poppins',
+    }
+  },
 }
 
 const DrawerNavigator = createDrawerNavigator(
   {
     Home: {
       screen:RootStack,
+      navigationOptions: {
+        drawerLabel: () => null,
+      },
     },
     AddClient: {
       screen:AddClient,
+      navigationOptions: {
+        drawerLabel: () => null,
+      },
     },
     Clients: {
        screen:Clients,
+       navigationOptions: {
+      drawerLabel: () => null,
+      },
     },
     ViewClient: {
       screen: ViewClient,
+      navigationOptions: {
+      drawerLabel: () => null,
+      },
     },
     Balances: {
       screen:Balances,
+      navigationOptions: {
+      drawerLabel: () => null,
+      },
+    },
+    AddSales: {
+      screen:AddSales,
+      navigationOptions: {
+      drawerLabel: () => null,
+      },
     },
 
   },

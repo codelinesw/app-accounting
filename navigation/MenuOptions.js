@@ -20,19 +20,19 @@ export default class MenuOptions extends React.Component {
             </TouchableOpacity>
             <TouchableOpacity style={styles.link_navigation} onPress={() => this.props.navigation.navigate('Accounting')}>
               <Image source={require('../images/discount.png')} style={styles.icon_link} />
-              <Text style={styles.link_text}>Contabilidad</Text>
+              <Text style={[styles.link_text,{fontFamily:'Poppins',}]}>Contabilidad</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.link_navigation} onPress={() => this.props.navigation.navigate('Clients')}>
               <Image source={require('../images/avatar.png')} style={styles.icon_link} />
-              <Text style={styles.link_text}>Clientes</Text>
+              <Text style={[styles.link_text,{fontFamily:'Poppins',}]}>Clientes</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.link_navigation} onPress={() => this.props.navigation.navigate('Balances')}>
               <Image source={require('../images/sale.png')} style={styles.icon_link} />
-              <Text style={styles.link_text}>Saldos</Text>
+              <Text style={[styles.link_text,{fontFamily:'Poppins',}]}>Saldos</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.link_navigation} onPress={() => this.props.navigation.navigate('ViewClient')}>
               <Image source={require('../images/money-bag.png')} style={styles.icon_link} />
-              <Text style={styles.link_text}>Compras</Text>
+              <Text style={[styles.link_text,{fontFamily:'Poppins',}]}>Compras</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.panel_configuration}>

@@ -10,6 +10,7 @@ export default class ButtonAdd extends React.Component{
   render(){
     const { typeButton } = this.props;
     let screen_ = (typeButton == "addclients") ? "AddClient" : "AddBalances";
+    screen_ = (typeButton == "addsales") ? "AddSales" : screen_;
       return(
         <TouchableOpacity style={[styles.btnwgreen,{right:10,padding:3,}]} onPress={() => this.props.navigation.navigate(screen_)}>
           <Text style={[styles.textlight,{fontFamily:"Poppins-Bold",color:"#59f090"}]}>Añadir</Text>

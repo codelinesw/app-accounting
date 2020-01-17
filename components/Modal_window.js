@@ -63,6 +63,7 @@ export default class Modal_window extends React.Component{
               (<TouchableOpacity style={[styles.btnModal,{fontFamily:'Poppins'},styles.btnTopradius]}><Text style={{fontSize:15,color:'#5c5b5e',fontFamily:'Poppins',}}>Eliminar</Text></TouchableOpacity>)
               : <TouchableOpacity style={[styles.btnModal,{fontFamily:'Poppins'},styles.btnTopradius]}><Text style={{fontSize:15,color:'#5c5b5e',fontFamily:'Poppins',}}>Reportar</Text></TouchableOpacity>
             }
+            <TouchableOpacity style={[styles.btnModal,{fontFamily:'Poppins'},styles.btnTopradius]}><Text style={{fontSize:15,color:'#5c5b5e',fontFamily:'Poppins',}}>Compartir</Text></TouchableOpacity>
           </View>
         </View>
       </Modal>

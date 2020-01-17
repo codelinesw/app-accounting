@@ -441,6 +441,7 @@ const styles = StyleSheet.create({
     borderColor:bgGreen,
     borderRadius:6,
   },
+
   iconInput: {
     position:'absolute',
     left:18,
