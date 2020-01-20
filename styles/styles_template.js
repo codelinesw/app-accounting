@@ -577,6 +577,18 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems:'center',
   },
+
+  container_preloader_expand: {
+    position:'absolute',
+    top:80,
+    left:15,
+    zIndex:2000,
+    width:(WIDTH-30),
+    height:250,
+    justifyContent:'center',
+    alignItems:'center',
+    backgroundColor:'rgba(255,255,255,0.6)'
+  }
 });
 
 

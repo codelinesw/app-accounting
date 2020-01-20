@@ -1,10 +1,10 @@
 import React from 'react';
-import { Text, View ,Dimensions, TouchableOpacity, Image, TextInput, FlatList,ActivityIndicator, } from 'react-native';
+import { Text, View ,Dimensions, TouchableOpacity, Image, TextInput, FlatList,ActivityIndicator } from 'react-native';
 import styles from '../styles/styles_template';
 import { Ionicons } from '@expo/vector-icons';
 import ButtonMenu from "../components/ButtonMenu";
+import services from "../request/services";
 import routes from "../request/routes";
-
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
@@ -27,10 +27,30 @@ export default class Clients extends React.Component{
       type:JSON.stringify(this.props.navigation.getParam('type', 'TODOS'))
     };
     this._count_ = 0;
+    this.isMounted_ = false;
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    if(this.state.data_ !== nextState.data_){
+      return true;
+    }else{
+      false;
+    }
+  }
+
+  componentDidUpdate(nextProps, nextState){
+    if(this.state.data_ !== nextState.data_){
+      this.getClients();
+    }
   }
 
   componentDidMount(){
     this.getClients();
+    this.isMounted_ = true;
+  }
+
+  componentWillUnmount(){
+    this.isMounted_ = false;
   }
 
   onchangetext(text){
@@ -60,35 +80,29 @@ export default class Clients extends React.Component{
   }
   getClients(){
     const { type } = this.state;
-    fetch(routes.clients.list,{
-            method: 'post',
-            headers: {
-              'Accept': 'application/json, text/plain, */*',
-              'Content-Type': 'application/json'
-            },
-            body: type,
-        })
-        .then(res => res.json())
-        .then(res => {
-            this.setState({
-              isLoaded: true,
-              data_:res,
-            });
-            //alert(res);
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        })
-        .catch(function(error) {
-          Alert.alert(
-            error.message
-          )
-         // ADD THIS THROW error
-          throw error;
+    const URL = (type.replace(/\"/g,'') == "TODOS") ? routes.clients.list : routes.clients.list_new;
+    services.request(URL,type)
+    .then(res => res.json())
+    .then(res => {
+      if(this.isMounted_){
+        this.setState({
+          isLoaded: true,
+          data_:res,
         });
+      }
+    },
+    (error) => {
+      this.setState({
+        isLoaded: true,
+        error
+      });
+    }).catch(function(error) {
+      Alert.alert(
+        error.message
+      )
+     // ADD THIS THROW error
+      throw error;
+    });
   }
 
   _renderItems_(item,index){
@@ -98,28 +112,35 @@ export default class Clients extends React.Component{
         <View style={styles.preloader}><ActivityIndicator size="large" /></View>
       </View>)
     }else{
-      return(
-        <View style={[styles.box_information,styles.expand_box_information]}>
-          <View style={{flexDirection:'row'}}>
-            <View style={[styles.circle,style_]}></View>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('ViewClient',{c_client_id:item.c_client_id,c_name:item.c_name,c_phone:item.c_phone})}><Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>{item.c_name}</Text></TouchableOpacity>
-          </View>
-          <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>(+57) {item.c_phone}</Text>
-          <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Jhon es un cliente que le gusta hacer compras constantemente de jeans</Text>
-          <View style={styles.btnGroup}>
-            <TouchableOpacity style={styles.btngray}>
-              <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Editar</Text>
+      if(Object.values(item) == "empty"){
+        return (
+          <View><Text style={{fontFamily:"Poppins",}}>No hay clientes aún</Text></View>
+        )
+      }else{
+        return(
+          <View style={[styles.box_information,styles.expand_box_information]}>
+            <View style={{flexDirection:'row'}}>
+              <View style={[styles.circle,style_]}></View>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('ViewClient',{c_client_id:item.c_client_id,c_name:item.c_name,c_phone:item.c_phone})}><Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>{item.c_name}</Text></TouchableOpacity>
+            </View>
+            <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>(+57) {item.c_phone}</Text>
+            <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Jhon es un cliente que le gusta hacer compras constantemente de jeans</Text>
+            <View style={styles.btnGroup}>
+              <TouchableOpacity style={styles.btngray} onPress={() => this.props.navigation.navigate('AddClient',{c_client_id:item.c_client_id,c_name:item.c_name,c_address:item.c_address,c_phone:item.c_phone})}>
+                <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Editar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btnwgray}>
+                <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Eliminar</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity style={styles.btnfavorites}>
+               <Ionicons name="md-star" color="#a4a6ac" size={22} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btnwgray}>
-              <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Eliminar</Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity style={styles.btnfavorites}>
-             <Ionicons name="md-star" color="#a4a6ac" size={22} />
-          </TouchableOpacity>
-          <Text style={[styles.textdate,{fontFamily:"Poppins",}]}>{this.formatDate(item.c_date)}</Text>
-       </View>
-      )
+            <Text style={[styles.textdate,{fontFamily:"Poppins",}]}>{this.formatDate(item.c_date)}</Text>
+         </View>
+        )
+      }
+
     }
   }
   render(){
