@@ -38,7 +38,7 @@ export default class AddClient extends React.Component{
 	      toValue: 1,
 	      duration: 500
 	    }).stop();
-		},1000).bind(this);
+		},1000);
   };
 
 	sendData(URL,data_){
