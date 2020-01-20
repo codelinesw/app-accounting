@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextInput, View ,Dimensions, TouchableOpacity, Image, Text, ActivityIndicator} from 'react-native';
+import { TextInput, View ,Dimensions, TouchableOpacity, Image, Text, ActivityIndicator, Animated} from 'react-native';
 import styles from '../styles/styles_template';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import services from "../request/services";
@@ -13,18 +13,33 @@ export default class AddClient extends React.Component{
 	constructor(props) {
 	  	super(props);
 	  	this.state = {
-			value:'',
-			c_client_id: JSON.stringify(this.props.navigation.getParam('c_client_id', '')).replace(/\"/g,''),
-			c_name: JSON.stringify(this.props.navigation.getParam('c_name', '')).replace(/\"/g,''),
-			c_phone: JSON.stringify(this.props.navigation.getParam('c_phone', '0')).replace(/\"/g,''),
-			c_address: JSON.stringify(this.props.navigation.getParam('c_address', '')).replace(/\"/g,''),
-			data_: [""]
+				value:'',
+				c_client_id: JSON.stringify(this.props.navigation.getParam('c_client_id', '')).replace(/\"/g,''),
+				c_name: JSON.stringify(this.props.navigation.getParam('c_name', '')).replace(/\"/g,''),
+				c_phone: JSON.stringify(this.props.navigation.getParam('c_phone', '0')).replace(/\"/g,''),
+				c_address: JSON.stringify(this.props.navigation.getParam('c_address', '')).replace(/\"/g,''),
+				data_: [""],
+				fadeValue: new Animated.Value(0),
+				message_alert: 'Por favor complete los campos vacios.',
 	    };
 	}
 
 	onChangeText(text){
 		this.setState({value:text});
 	}
+	_start = () => {
+    Animated.timing(this.state.fadeValue, {
+      toValue: 1,
+      duration: 500
+    }).start();
+
+		setTimeout(function(){
+			Animated.timing(this.state.fadeValue, {
+	      toValue: 1,
+	      duration: 500
+	    }).stop();
+		},1000).bind(this);
+  };
 
 	sendData(URL,data_){
 		this.setState({isLoaded:true});
@@ -54,13 +69,13 @@ export default class AddClient extends React.Component{
 	validateForm(){
 		const { c_client_id , c_name, c_phone, c_address } = this.state;
 			if(c_name == "" && c_phone == "" && c_address == ""){
-				alert("Complete todos los campos");
+				this._start();
 			}else if(c_name == ""){
-				alert("Complete el campo del nombre");
+				this._start();
 			}else if(c_phone == "" || c_phone == "0"){
-				alert("Complete el campo del telefono");
+				this._start();
 			}else if(c_address == ""){
-				alert("Complete el campo de la direccion");
+				this._start();
 			}else{
 				if(c_client_id == ""){
 					let data_ = JSON.stringify({
@@ -82,13 +97,16 @@ export default class AddClient extends React.Component{
 
 	}
 	render(){
-    const { value, isLoaded } = this.state;
+    const { value, isLoaded, message_alert } = this.state;
 		return(
 			  <View style={[styles.container,{backgroundColor:'white',}]}>
           <View style={[styles.headerTitle,{flexDirection:'column', justifyContent:'flex-start',textAlign:'left',alignItems:'flex-start',height:95,resizeMode: 'contain'}]}>
               <Text style={[styles.title,{fontFamily:'Poppins-Bold', marginTop:15,}]}>Añade un nuevo cliente</Text>
 							<Text style={[styles.textlight,{fontFamily:'Poppins'}]}>En esta zona puedes agrega un nuevo cliente a tu lista</Text>
           </View>
+					<Animated.View style={[styles.toast,styles.bgGreen,{opacity: this.state.fadeValue,}]}>
+          	<Text style={[styles.text,styles.textwhite,{position:'relative',right:20,fontFamily:'Poppins'}]}>{message_alert}</Text>
+        	</Animated.View>
           <View style={[styles.body,{justifyContent:'center',alignItems:'center'}]}>
 						<View style={styles.input_group}>
 							<Ionicons
@@ -123,7 +141,7 @@ export default class AddClient extends React.Component{
 						/>
 					</View>
 					<View style={[styles.input_group,{right:0,}]}>
-					  <TouchableOpacity style={[styles.btnExpand,styles.btngreen]} onPress={()=> this.validateForm()}>
+					  <TouchableOpacity style={[styles.btnExpand,styles.btngreen]} onPress={()=> this._start()}>
 						  <Text style={[styles.textwhite,{fontFamily:"Poppins",}]}>Agregar</Text>
 					  </TouchableOpacity>
 					</View>

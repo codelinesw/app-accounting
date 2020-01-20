@@ -10,6 +10,7 @@ const light		= '#e1e1e6';
 const white 	= '#ffffff';
 const bgBlue 		= '#00e6e9';
 const btnGray   = '#f5f5f5';
+const bgRed     = '#FF5244';
 
 /* The following dimensions are defined */
 
@@ -269,6 +270,9 @@ const styles = StyleSheet.create({
   	backgroundColor:bgGreen,
   },
 
+  bgGreen: {
+    backgroundColor:'#4FE067',
+  },
   bgroundYellow: {
   	backgroundColor:bgYellow,
   },
@@ -279,6 +283,10 @@ const styles = StyleSheet.create({
 
   bgroundPurpple:{
   	backgroundColor:bgPurpple,
+  },
+
+  bgroundRed:{
+  	backgroundColor:bgRed,
   },
 
   bgroundDark: {
@@ -588,7 +596,21 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems:'center',
     backgroundColor:'rgba(255,255,255,0.6)'
-  }
+  },
+
+  toast: {
+    position:'absolute',
+    top:30,
+    padding:25,
+    width:(WIDTH-35),
+    height:35,
+    justifyContent:'center',
+    alignItems:'flex-start',
+    borderRadius:6,
+    left:15,
+    zIndex:1000,
+  },
+
 });
 
 
