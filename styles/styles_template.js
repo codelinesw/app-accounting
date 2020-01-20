@@ -414,8 +414,8 @@ const styles = StyleSheet.create({
 
   containerOptions: {
     position:'relative',
-    width:(WIDTH-200),
-    height:75,
+    width:(WIDTH-170),
+    height:113,
     backgroundColor:white,
     borderRadius:6,
   },
@@ -563,6 +563,18 @@ const styles = StyleSheet.create({
     right:5,
     top:20,
     fontWeight:'bold',
+    alignItems:'center',
+  },
+
+  //estilos para el contenedor de la precarga
+  container_preloader: {
+    position:'relative',
+    top:0,
+    zIndex:2000,
+    width:(WIDTH-38),
+    height:330,
+    backgroundColor:'rgba(255,255,255,0.6)',
+    justifyContent:'center',
     alignItems:'center',
   },
 });

@@ -52,8 +52,8 @@ export default class Home extends React.Component{
                  <Image source={require('../images/user.png')} style={styles.avatar} />
                </View>
                <View style={styles.panel_right}>
-                 <Text style={[styles.title,{fontFamily:"Poppins-Bold",fontSize:12,marginTop:9,}]}>Jhon Denver Murillo</Text>
-                 <Text style={[styles.textlight,{fontFamily:"Poppins",fontSize:11,}]}>(+57) 3117222333</Text>
+                 <Text style={[styles.title,{fontFamily:"Poppins-Bold",fontSize:12,marginTop:9,}]}>{JSON.stringify(this.props.navigation.getParam('c_name', 'Administrador')).replace(/\"/g,"")}</Text>
+                 <Text style={[styles.textlight,{fontFamily:"Poppins",fontSize:11,}]}>(+57) {JSON.stringify(this.props.navigation.getParam('c_phone', '000')).replace(/\"/g,"")}</Text>
                  <View style={{flexDirection:'row'}}>
                    <View style={[styles.circle,styles.bgroundGreen]}></View>
                    <Text style={[styles.text,{fontFamily:"Poppins",fontSize:12,}]}>Cliente constante</Text>

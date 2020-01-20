@@ -1,8 +1,10 @@
 import React from 'react';
-import { Text, View ,Dimensions, TouchableOpacity, Image, TextInput } from 'react-native';
+import { Text, View ,Dimensions, TouchableOpacity, Image, TextInput, FlatList,ActivityIndicator, } from 'react-native';
 import styles from '../styles/styles_template';
 import { Ionicons } from '@expo/vector-icons';
 import ButtonMenu from "../components/ButtonMenu";
+import routes from "../request/routes";
+
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
@@ -19,9 +21,16 @@ export default class Clients extends React.Component{
       showing:false,
       expand:true,
       nameicon:'md-arrow-up',
-      nameorder:'ASCENDENTE'
+      nameorder:'ASCENDENTE',
+      isLoaded:false,
+      data_:[''],
+      type:JSON.stringify(this.props.navigation.getParam('type', 'TODOS'))
     };
     this._count_ = 0;
+  }
+
+  componentDidMount(){
+    this.getClients();
   }
 
   onchangetext(text){
@@ -43,6 +52,76 @@ export default class Clients extends React.Component{
     }
   }
 
+  formatDate(date){
+    let new_date = String(date).substring(0,String(date).indexOf(" "));
+    new_date = new_date.split("-");
+    new_date = new_date[2]+'/'+new_date[1]+'/'+new_date[0];
+    return new_date;
+  }
+  getClients(){
+    const { type } = this.state;
+    fetch(routes.clients.list,{
+            method: 'post',
+            headers: {
+              'Accept': 'application/json, text/plain, */*',
+              'Content-Type': 'application/json'
+            },
+            body: type,
+        })
+        .then(res => res.json())
+        .then(res => {
+            this.setState({
+              isLoaded: true,
+              data_:res,
+            });
+            //alert(res);
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        })
+        .catch(function(error) {
+          Alert.alert(
+            error.message
+          )
+         // ADD THIS THROW error
+          throw error;
+        });
+  }
+
+  _renderItems_(item,index){
+    let style_ = (index%2) ? styles.bgroundPurpple : styles.bgroundGreen;
+    if(item == "" || item == "undefined" || item == null){
+      return  (<View style={[styles.container_preloader,{backgroundColor:'transparent'}]}>
+        <View style={styles.preloader}><ActivityIndicator size="large" /></View>
+      </View>)
+    }else{
+      return(
+        <View style={[styles.box_information,styles.expand_box_information]}>
+          <View style={{flexDirection:'row'}}>
+            <View style={[styles.circle,style_]}></View>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('ViewClient',{c_client_id:item.c_client_id,c_name:item.c_name,c_phone:item.c_phone})}><Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>{item.c_name}</Text></TouchableOpacity>
+          </View>
+          <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>(+57) {item.c_phone}</Text>
+          <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Jhon es un cliente que le gusta hacer compras constantemente de jeans</Text>
+          <View style={styles.btnGroup}>
+            <TouchableOpacity style={styles.btngray}>
+              <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Editar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btnwgray}>
+              <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Eliminar</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity style={styles.btnfavorites}>
+             <Ionicons name="md-star" color="#a4a6ac" size={22} />
+          </TouchableOpacity>
+          <Text style={[styles.textdate,{fontFamily:"Poppins",}]}>{this.formatDate(item.c_date)}</Text>
+       </View>
+      )
+    }
+  }
   render(){
     const { fontsLoaded, poppins, poppinsBold, value, showing, expand, nameicon, nameorder } = this.state;
       return(
@@ -72,65 +151,14 @@ export default class Clients extends React.Component{
                     <Ionicons name="md-close" color="#a4a6ac" size={22} />
                  </TouchableOpacity> : null}
                </View>
-               <View style={[styles.box_information,styles.expand_box_information]}>
-                 <View style={{flexDirection:'row'}}>
-                   <View style={[styles.circle,styles.bgroundPurpple]}></View>
-                   <TouchableOpacity onPress={() => this.props.navigation.navigate('ViewClient')}><Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Jhon Denver Murillo Mendez</Text></TouchableOpacity>
-                 </View>
-                 <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>(+57) 3117222333</Text>
-                 <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Jhon es un cliente que le gusta hacer compras constantemente de jeans</Text>
-                 <View style={styles.btnGroup}>
-                   <TouchableOpacity style={styles.btngray}>
-                     <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Editar</Text>
-                   </TouchableOpacity>
-                   <TouchableOpacity style={styles.btnwgray}>
-                     <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Eliminar</Text>
-                   </TouchableOpacity>
-                 </View>
-                 <TouchableOpacity style={styles.btnfavorites}>
-                    <Ionicons name="md-star" color="#a4a6ac" size={22} />
-                 </TouchableOpacity>
-                 <Text style={[styles.textdate,{fontFamily:"Poppins",}]}>09/01/2019</Text>
-               </View>
-               <View style={[styles.box_information,styles.expand_box_information]}>
-                 <View style={{flexDirection:'row'}}>
-                   <View style={[styles.circle,styles.bgroundGreen]}></View>
-                   <TouchableOpacity onPress={() => this.props.navigation.navigate('ViewClient')}><Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Jhon Denver Murillo Mendez</Text></TouchableOpacity>
-                 </View>
-                 <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>(+57) 3117222333</Text>
-                 <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Jhon es un cliente que le gusta hacer compras constantemente de jeans</Text>
-                 <View style={styles.btnGroup}>
-                   <TouchableOpacity style={styles.btngray}>
-                     <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Editar</Text>
-                   </TouchableOpacity>
-                   <TouchableOpacity style={styles.btnwgray}>
-                     <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Eliminar</Text>
-                   </TouchableOpacity>
-                 </View>
-                 <TouchableOpacity style={styles.btnfavorites}>
-                    <Ionicons name="md-star" color="#a4a6ac" size={22} />
-                 </TouchableOpacity>
-                 <Text style={[styles.textdate,{fontFamily:"Poppins",}]}>09/01/2019</Text>
-               </View>
-               <View style={[styles.box_information,styles.expand_box_information]}>
-                 <View style={{flexDirection:'row'}}>
-                   <View style={[styles.circle,styles.bgroundYellow]}></View>
-                   <TouchableOpacity onPress={() => this.props.navigation.navigate('ViewClient')}><Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Jhon Denver Murillo Mendez</Text></TouchableOpacity>
-                 </View>
-                 <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>(+57) 3117222333</Text>
-                 <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Jhon es un cliente que le gusta hacer compras constantemente de jeans</Text>
-                 <View style={styles.btnGroup}>
-                   <TouchableOpacity style={styles.btngray}>
-                     <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Editar</Text>
-                   </TouchableOpacity>
-                   <TouchableOpacity style={styles.btnwgray}>
-                     <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Eliminar</Text>
-                   </TouchableOpacity>
-                 </View>
-                 <TouchableOpacity style={styles.btnfavorites}>
-                    <Ionicons name="md-star" color="#a4a6ac" size={22} />
-                 </TouchableOpacity>
-                 <Text style={[styles.textdate,{fontFamily:"Poppins",}]}>09/01/2019</Text>
+               <View style={{width:WIDTH,alignItems: 'center'}}>
+                 <FlatList
+                 contentContainerStyle={{ justifyContent: 'center', alignItems:'center', }}
+                  style={{width:WIDTH}}
+                  data={this.state.data_}
+                  renderItem={({ item,index }) => this._renderItems_(item,index)}
+                  keyExtractor={(item,index) => {return index.toString()}}
+                />
                </View>
              </View>
 

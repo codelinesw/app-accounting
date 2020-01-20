@@ -65,6 +65,7 @@ export default class Home extends React.Component{
                <View style={styles.containerModal}>
                  <View style={styles.containerOptions}>
                    <TouchableOpacity style={[styles.btnModal,{fontFamily:'Poppins'}]} onPress={this.Viewmore.bind(this)}><Text style={{fontSize:15,color:'#5c5b5e',fontFamily:'Poppins',}}>Ver más</Text></TouchableOpacity>
+                   <TouchableOpacity style={[styles.btnModal,{fontFamily:'Poppins'},styles.btnTopradius]}><Text style={{fontSize:15,color:'#5c5b5e',fontFamily:'Poppins',}}>Compartir</Text></TouchableOpacity>
                    <TouchableOpacity style={[styles.btnModal,{fontFamily:'Poppins'},styles.btnTopradius]}><Text style={{fontSize:15,color:'#5c5b5e',fontFamily:'Poppins',}}>Reportar</Text></TouchableOpacity>
                  </View>
                </View>
