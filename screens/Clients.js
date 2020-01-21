@@ -34,7 +34,7 @@ export default class Clients extends React.Component{
     if(this.state.data_ !== nextState.data_){
       return true;
     }else{
-      false;
+      return false;
     }
   }
 
