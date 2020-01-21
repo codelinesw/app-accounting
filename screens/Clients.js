@@ -1,5 +1,16 @@
 import React from 'react';
-import { Text, View ,Dimensions, TouchableOpacity, Image, TextInput, FlatList,ActivityIndicator } from 'react-native';
+import {
+  Text,
+  View ,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  FlatList,
+  ActivityIndicator,
+  Modal,
+  Animated
+} from 'react-native';
 import styles from '../styles/styles_template';
 import { Ionicons } from '@expo/vector-icons';
 import ButtonMenu from "../components/ButtonMenu";
@@ -24,7 +35,13 @@ export default class Clients extends React.Component{
       nameorder:'ASCENDENTE',
       isLoaded:false,
       data_:[''],
-      type:JSON.stringify(this.props.navigation.getParam('type', 'TODOS'))
+      type:JSON.stringify(this.props.navigation.getParam('type', 'TODOS')),
+      modalVisible:false,
+      fadeValue: new Animated.Value(0),
+		  message_alert: 'Por favor complete los campos vacios.',
+      bgalert:'',
+      showingPreloader:false,
+      c_client_id:0,
     };
     this._count_ = 0;
     this.isMounted_ = false;
@@ -52,6 +69,28 @@ export default class Clients extends React.Component{
   componentWillUnmount(){
     this.isMounted_ = false;
   }
+
+  _start = () => {
+
+	   const { fadeValue } = this.state;
+     Animated.sequence([
+           Animated.parallel([
+             Animated.timing(fadeValue, {
+               toValue: 1,
+               duration: 400,
+             }),
+
+           ]),
+           Animated.delay(2500),
+         Animated.parallel([
+           Animated.timing(fadeValue, {
+             toValue: 0,
+             duration: 400,
+           }),
+         ]),
+        ]).start();
+
+  	};
 
   onchangetext(text){
     let lenghtText = text.toString();
@@ -105,6 +144,37 @@ export default class Clients extends React.Component{
     });
   }
 
+  deleteClients(){
+    let data_ = JSON.stringify({
+      c_client_id: this.state.c_client_id,
+    });
+    services.request(routes.clients.delete,data_)
+    .then(res => res.text())
+    .then(res => {
+      if(res == "ok"){
+		  	this.setState({message_alert:'Se ha eliminado el cliente correctamente!',bgalert:styles.bgroundGreen});
+		  	this._start();
+        this.setState({modalVisible:false,c_client_id:0});
+		  }else{
+		  	this.setState({message_alert:'Ah ocurrido un error al intentar eliminar este cliente',bgalert:styles.bgroundRed});
+		  	this._start();
+        this.setState({modalVisible:false,c_client_id:0});
+		  }
+    },
+    (error) => {
+      this.setState({
+        isLoaded: true,
+        error
+      });
+    }).catch(function(error) {
+      Alert.alert(
+        error.message
+      )
+     // ADD THIS THROW error
+      throw error;
+    });
+  }
+
   _renderItems_(item,index){
     let style_ = (index%2) ? styles.bgroundPurpple : styles.bgroundGreen;
     if(item == "" || item == "undefined" || item == null){
@@ -129,7 +199,7 @@ export default class Clients extends React.Component{
               <TouchableOpacity style={styles.btngray} onPress={() => this.props.navigation.navigate('AddClient',{c_client_id:item.c_client_id,c_name:item.c_name,c_address:item.c_address,c_phone:item.c_phone})}>
                 <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Editar</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.btnwgray}>
+              <TouchableOpacity style={styles.btnwgray} onPress={() => this.showModal(item.c_client_id)}>
                 <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Eliminar</Text>
               </TouchableOpacity>
             </View>
@@ -143,10 +213,46 @@ export default class Clients extends React.Component{
 
     }
   }
+
+  showModal(id){
+    this.setState({modalVisible:true,c_client_id:id});
+  }
+
+  hideModal(){
+    this.setState({modalVisible:false});
+  }
+
   render(){
-    const { fontsLoaded, poppins, poppinsBold, value, showing, expand, nameicon, nameorder } = this.state;
+    const { fontsLoaded, poppins, poppinsBold, value, showing, expand, nameicon, nameorder,modalVisible, bgalert, fadeValue, message_alert, showingPreloader } = this.state;
       return(
         <View style={styles.container}>
+            <Modal
+            animationType="fade"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+            }}
+            >
+              <View style={styles.containerModal}>
+                <View style={[styles.containerOptions,styles.containerOptionsExpand]}>
+                  <Text style={[styles.title,{fontFamily:'Poppins-Bold',right:5,marginTop:4,}]}>¿Deseas Eliminar este Cliente?</Text>
+                  <Text style={[{fontFamily:'Poppins',left:5,color:'#a4a6ac'}]}>Recuerda que al aceptar,este cliente y sus registros serán borrados</Text>
+                  <View style={styles.containerButton}>
+                    <TouchableOpacity style={[styles.btnwground,{fontFamily:'Poppins'}]} onPress={() => this.deleteClients()}><Text style={[{fontSize:12,color:'#5c5b5e',fontFamily:'Poppins-Bold',},styles.textgreen]}>ACEPTAR</Text></TouchableOpacity>
+                    <TouchableOpacity style={[styles.btnwground,{fontFamily:'Poppins'}]} onPress={() => this.hideModal()}><Text style={[{fontSize:12,color:'#5c5b5e',fontFamily:'Poppins-Bold',},styles.textgreen]}>CANCELAR</Text></TouchableOpacity>
+                  </View>
+                </View>
+                {
+                  showingPreloader ? <View style={[styles.container_preloader,{backgroundColor:'transparent'},styles.containerOptionsExpandPreloader]}>
+                    <View style={[styles.preloader,{top:-13}]}><ActivityIndicator size="large" /></View>
+                  </View> : null
+                }
+              </View>
+            </Modal>
+            <Animated.View style={[styles.toast,bgalert,{opacity: fadeValue,top:43}]}>
+              <Text style={[styles.textwhite,{position:'relative',left:7,fontFamily:'Poppins'}]}>{message_alert}</Text>
+             </Animated.View>
              <View style={styles.body_}>
                <View style={styles.headerTitle}>
                   <Text style={[styles.textlight,{fontSize:12},{fontFamily:"Poppins",}]}>TODOS</Text>

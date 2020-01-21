@@ -39,18 +39,18 @@ export default class AddClient extends React.Component{
                 toValue: 1,
                 duration: 400,
               }),
-             
+
             ]),
             Animated.delay(2500),
 	        Animated.parallel([
 	          Animated.timing(fadeValue, {
 	            toValue: 0,
 	            duration: 400,
-	          }),    
+	          }),
 	        ]),
          ]).start();
-	   
-	  
+
+
   	};
 
   	componentWillUnmount() {
@@ -60,6 +60,7 @@ export default class AddClient extends React.Component{
 	sendData(URL,data_){
 	   this.setState({isLoaded:true});
 	   let response_ = false;
+		 let type_message = URL.split('/');
 	   services.request(URL,data_)
 	   .then(res => res.text())
 	   .then(res => {
@@ -69,11 +70,23 @@ export default class AddClient extends React.Component{
 		  });
 		  //alert(res);
 		  if(res == "ok"){
-		  	this.setState({message_alert:'Se ha actualizado el registro correctamente!',bgalert:styles.bgroundGreen});
-		  	this._start();
+				if(type_message[5] == "add"){
+					this.setState({message_alert:'Se ha añadido este cliente a tu lista correctamente!',bgalert:styles.bgroundGreen});
+			  	this._start();
+				}else{
+					this.setState({message_alert:'Se ha actualizado el registro correctamente!',bgalert:styles.bgroundGreen});
+			  	this._start();
+				}
+
 		  }else{
-		  	this.setState({message_alert:'Realice algunos cambios para actualizar la informacion de este cliente',bgalert:styles.bgroundRed});
-		  	this._start();
+				if(type_message[5] == "add"){
+					this.setState({message_alert:'Ah ocurrido un problema al intentar, intentelo de nuevo más tarde',bgalert:styles.bgroundYellow});
+			  	this._start();
+				}else{
+					this.setState({message_alert:'Realice algunos cambios para actualizar la informacion de este cliente',bgalert:styles.bgroundYellow});
+			  	this._start();
+				}
+
 		  }
 	   },
 	   (error) => {
@@ -130,7 +143,7 @@ export default class AddClient extends React.Component{
               <Text style={[styles.title,{fontFamily:'Poppins-Bold', marginTop:15,}]}>Añade un nuevo cliente</Text>
 			  <Text style={[styles.textlight,{fontFamily:'Poppins'}]}>En esta zona puedes agrega un nuevo cliente a tu lista</Text>
           </View>
-		  <Animated.View style={[styles.toast,bgalert,{opacity: fadeValue}]}>
+		  	  <Animated.View style={[styles.toast,bgalert,{opacity: fadeValue}]}>
           	<Text style={[styles.textwhite,{position:'relative',left:7,fontFamily:'Poppins'}]}>{message_alert}</Text>
           </Animated.View>
           <View style={[styles.body,{justifyContent:'center',alignItems:'center'}]}>

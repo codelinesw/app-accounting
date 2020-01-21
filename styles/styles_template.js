@@ -102,6 +102,10 @@ const styles = StyleSheet.create({
     color:white,
   },
 
+  textgreen: {
+    color:bgGreen,
+  },
+
   fontsizeDate: {
     fontSize:20,
     textAlign:'center',
@@ -240,6 +244,13 @@ const styles = StyleSheet.create({
   	borderBottomLeftRadius:6,
     borderBottomRightRadius:6,
   	color:dark,
+  },
+
+  btnwground: {
+    position:'relative',
+    padding:10,
+    marginLeft:8,
+    marginRight:8,
   },
 
   btnTopradius: {
@@ -426,6 +437,36 @@ const styles = StyleSheet.create({
     height:113,
     backgroundColor:white,
     borderRadius:6,
+  },
+
+  containerOptionsExpand: {
+    position:'relative',
+    width:(WIDTH-120),
+    height:203*0.75,
+    resizeMode:'contain',
+    padding:8,
+
+  },
+
+  containerOptionsExpandPreloader: {
+    position:'absolute',
+    top:'40%',
+    width:(WIDTH-120),
+    height:203*0.70,
+    resizeMode:'contain',
+    padding:8,
+    borderRadius:6,
+    backgroundColor:'rgba(255,255,255,0.7)',
+    
+  },
+
+  containerButton: {
+    position:'relative',
+    flexDirection:'row',
+    justifyContent:'space-between',
+    width:(WIDTH-140),
+    left:1,
+    top:5,
   },
 
   //styles for input
