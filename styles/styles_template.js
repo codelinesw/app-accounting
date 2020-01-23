@@ -654,6 +654,21 @@ const styles = StyleSheet.create({
     left:12,
     zIndex:1000,
   },
+  toast_bottom: {
+    position:'absolute',
+    bottom:120,
+    padding:5,
+    paddingTop:10,
+    paddingBottom:10,
+    paddingRight:12,
+    width:(WIDTH-25),
+    height:55,
+    justifyContent:'center',
+    alignItems:'flex-start',
+    borderRadius:6,
+    left:12,
+    zIndex:1000,
+  },
 
 });
 

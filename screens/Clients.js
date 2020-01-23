@@ -28,13 +28,14 @@ export default class Clients extends React.Component{
       fontsLoaded: false,
       poppins:'',
       poppinsBold:'',
-      value:'',
+      s_value:'',
       showing:false,
       expand:true,
       nameicon:'md-arrow-up',
       nameorder:'ASCENDENTE',
       isLoaded:false,
       data_:[''],
+      data:[''],
       type:JSON.stringify(this.props.navigation.getParam('type', 'TODOS')),
       modalVisible:false,
       fadeValue: new Animated.Value(0),
@@ -45,25 +46,28 @@ export default class Clients extends React.Component{
     };
     this._count_ = 0;
     this.isMounted_ = false;
+    this.arrayholder = [];
   }
 
-  shouldComponentUpdate(nextProps, nextState){
-    if(this.state.data_ !== nextState.data_){
-      return true;
-    }else{
-      return false;
-    }
-  }
+  // shouldComponentUpdate(nextProps, nextState){
+  //   if(this.state.data_ !== nextState.data_){
+  //     return true;
+  //   }else{
+  //     return false;
+  //   }
+  // }
 
-  componentDidUpdate(nextProps, nextState){
-    if(this.state.data_ !== nextState.data_){
-      this.getClients();
-    }
-  }
+  // componentDidUpdate(nextProps, nextState){
+  //   if(this.state.data_ !== nextState.data_){
+  //     this.getClients();
+  //   }
+  // }
 
   componentDidMount(){
     this.getClients();
+    this.makeRemoteRequest();
     this.isMounted_ = true;
+    
   }
 
   componentWillUnmount(){
@@ -93,11 +97,21 @@ export default class Clients extends React.Component{
   	};
 
   onchangetext(text){
-    let lenghtText = text.toString();
-    if(lenghtText.length > 0){
-      this.setState({value:text,showing:true,expand:false});
+    text = text.toString();
+    if(text.trim().length > 0){
+      this.setState({s_value:text,showing:true,expand:false});
+      const newData = this.state.data_.filter(item => {
+        let itemData = `${item.c_name}`;
+        return itemData.indexOf(text) > -1;
+      });
+      if(JSON.stringify(newData)=='{}'){
+        this.getClients();
+      }else{
+        this.setState({ data_: newData});
+      }
     }else{
-      this.setState({value:text,showing:false,expand:true});
+      this.setState({s_value:text,showing:false,expand:true});
+      this.getClients();
     }
 
   }
@@ -128,6 +142,7 @@ export default class Clients extends React.Component{
           isLoaded: true,
           data_:res,
         });
+        this.arrayholder = res;
       }
     },
     (error) => {
@@ -221,9 +236,24 @@ export default class Clients extends React.Component{
   hideModal(){
     this.setState({modalVisible:false});
   }
+  makeRemoteRequest = () => {    
+    const url = 'https://randomuser.me/api/?&results=20';
+    fetch(url)      
+      .then(res => res.json())      
+      .then(res => {        
+        this.setState({          
+          data: res.results       
+        });        
+        
+       this.arrayholder = res.results;      
+     })      
+     .catch(error => {        
+       this.setState({ data:error });      
+     });  
+  };
 
   render(){
-    const { fontsLoaded, poppins, poppinsBold, value, showing, expand, nameicon, nameorder,modalVisible, bgalert, fadeValue, message_alert, showingPreloader } = this.state;
+    const { fontsLoaded, poppins, poppinsBold, s_value, showing, expand, nameicon, nameorder,modalVisible, bgalert, fadeValue, message_alert, showingPreloader } = this.state;
       return(
         <View style={styles.container}>
             <Modal
@@ -250,7 +280,7 @@ export default class Clients extends React.Component{
                 }
               </View>
             </Modal>
-            <Animated.View style={[styles.toast,bgalert,{opacity: fadeValue,top:43}]}>
+            <Animated.View style={[styles.toast_bottom,bgalert,{opacity: fadeValue}]}>
               <Text style={[styles.textwhite,{position:'relative',left:7,fontFamily:'Poppins'}]}>{message_alert}</Text>
              </Animated.View>
              <View style={styles.body_}>
@@ -271,7 +301,7 @@ export default class Clients extends React.Component{
                  <TextInput
                     style={[styles.inputSearch,styles.textsearch,{fontFamily:"Poppins",},expand ? styles.inputExpand : '']}
                     onChangeText={text => this.onchangetext(text)}
-                    value={value}
+                    value={s_value}
                     placeholder="Buscas algo?"
                   />
                   {showing ? <TouchableOpacity style={[styles.btnfavorites,styles.btndeletetext]}>

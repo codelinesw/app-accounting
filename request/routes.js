@@ -2,17 +2,17 @@
 
 const routes = {
 	clients: {
-		add:"https://e68656cf.ngrok.io/app-accounting/clients_/add/",
-		list:"https://e68656cf.ngrok.io/app-accounting/clients_/list/",
-		update:"https://e68656cf.ngrok.io/app-accounting/clients_/update/",
-		delete:"https://e68656cf.ngrok.io/app-accounting/clients_/delete/"
+		add:"https://8f772b15.ngrok.io/app-accounting/clients_/add/",
+		list:"https://8f772b15.ngrok.io/app-accounting/clients_/list/",
+		update:"https://8f772b15.ngrok.io/app-accounting/clients_/update/",
+		delete:"https://8f772b15.ngrok.io/app-accounting/clients_/delete/"
 	},
 	sales: {
-		add:"https://e68656cf.ngrok.io/app-accounting/sales_/add/",
-		list:"https://e68656cf.ngrok.io/app-accounting/sales_/list/",
-		list_id:"https://e68656cf.ngrok.io/app-accounting/sales_/list_id/",
-		update:"https://e68656cf.ngrok.io/app-accounting/sales_/update/",
-		delete:"https://e68656cf.ngrok.io/app-accounting/sales_/delete/"
+		add:"https://8f772b15.ngrok.io/app-accounting/sales_/add/",
+		list:"https://8f772b15.ngrok.io/app-accounting/sales_/list/",
+		list_id:"https://8f772b15.ngrok.io/app-accounting/sales_/list_id/",
+		update:"https://8f772b15.ngrok.io/app-accounting/sales_/update/",
+		delete:"https://8f772b15.ngrok.io/app-accounting/sales_/delete/"
 	},
 	balances: {
 		add:"",
