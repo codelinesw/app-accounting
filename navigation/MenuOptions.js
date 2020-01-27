@@ -36,7 +36,7 @@ export default class MenuOptions extends React.Component {
             </TouchableOpacity>
           </View>
           <View style={styles.panel_configuration}>
-            <TouchableOpacity style={styles.link_navigation} onPress={() => this.props.navigation.navigate('Accounting')}>
+            <TouchableOpacity style={styles.link_navigation} onPress={() => this.props.navigation.navigate('Balancedetails')}>
               <Image source={require('../images/settings.png')} style={styles.icon_link} />
               <Text style={styles.link_text}>Configuraciones</Text>
             </TouchableOpacity>

@@ -1,15 +1,18 @@
 import React from 'react';
-import { StyleSheet, Platform , Dimensions} from 'react-native';
+import {  Platform , Dimensions } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
-
+import styles from '../styles/styles_template';
 
 import ButtonBack from "../components/ButtonBack";
 import SearchButton from "../components/SearchButton";
 import ButtonMenu from "../components/ButtonMenu";
 import ButtonAdd from "../components/ButtonAdd";
+import ButtonDelete from "../components/ButtonDelete";
+import ButtonDownload from "../components/ButtonDownload";
+import DownloadFile from "../screens/DownloadFile";
 import Home from "../screens/Home";
 import AddClient from "../screens/AddClient";
 import AddSales from "../screens/AddSales";
@@ -19,6 +22,8 @@ import Messages from '../screens/Messages';
 import ViewClient from '../screens/ViewClient';
 import AddBalances from '../screens/AddBalances';
 import Balances from '../screens/Balances';
+import Balancedetails from '../screens/Balancedetails';
+import ViewPdf from '../screens/ViewPdf';
 import MenuOptions from "./MenuOptions";
 
 const WIDTH = Dimensions.get('window').width;
@@ -104,7 +109,7 @@ const RootStack = createStackNavigator(
           headerTitleStyle: {
             fontFamily: "Poppins",
           }
-        })
+      })
     },
 
     AddClient: {
@@ -164,6 +169,29 @@ const RootStack = createStackNavigator(
         }
       })
     },
+
+    Balancedetails: {
+      screen:Balancedetails,
+      navigationOptions: ({ navigation }) => ({
+        title:'Volver',
+        headerStyle: {
+          shadowOpacity: 0,
+          elevation:0,
+          backgroundColor:"#59f090",
+        },
+        headerTitleStyle: {
+            fontSize: 16,
+            fontFamily:"Poppins",
+            color:'#ffffff',
+            right:20,
+            top:2,
+        },
+        headerRight: (
+         <ButtonDelete navigation={navigation} />
+        ),
+      }),
+      
+    },
    Accounting: {
      screen:TabAccounting,
       navigationOptions: ({navigation}) => ({
@@ -183,6 +211,18 @@ const RootStack = createStackNavigator(
        title:'Agrega una nueva Venta',
      })
    },
+   ViewPdf: {
+     screen:ViewPdf,
+     navigationOptions: ({ navigation }) => ({
+       title:'View previa de los saldos de este cliente',
+       headerRight: (
+         <ButtonDownload navigation={navigation} />
+       )
+     })
+   },
+   DownloadFile: {
+     screen:DownloadFile,
+   }
 
   },
 
@@ -240,21 +280,21 @@ const DrawerNavigator = createDrawerNavigator(
       drawerLabel: () => null,
       },
     },
+    Balancedetails: {
+      screen: Balancedetails
+    },
+    ViewPdf: {
+     screen:ViewPdf,
+   },
+   DownloadFile: {
+     screen:DownloadFile,
+   }
 
   },
 
   DrawerConfig
 );
 
-const styles = StyleSheet.create({
-  avatar_red:{
-    backgroundColor:'#F75C3B',
-  },
-
-  avatar_green: {
-    backgroundColor:'#78e88d',
-  },
-})
 
 //const AppContainer = createAppContainer(RootStack);
 const AppContainer = createAppContainer(DrawerNavigator);

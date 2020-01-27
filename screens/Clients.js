@@ -65,7 +65,7 @@ export default class Clients extends React.Component{
 
   componentDidMount(){
     this.getClients();
-    this.makeRemoteRequest();
+    //this.makeRemoteRequest();
     this.isMounted_ = true;
     
   }
@@ -236,21 +236,7 @@ export default class Clients extends React.Component{
   hideModal(){
     this.setState({modalVisible:false});
   }
-  makeRemoteRequest = () => {    
-    const url = 'https://randomuser.me/api/?&results=20';
-    fetch(url)      
-      .then(res => res.json())      
-      .then(res => {        
-        this.setState({          
-          data: res.results       
-        });        
-        
-       this.arrayholder = res.results;      
-     })      
-     .catch(error => {        
-       this.setState({ data:error });      
-     });  
-  };
+  
 
   render(){
     const { fontsLoaded, poppins, poppinsBold, s_value, showing, expand, nameicon, nameorder,modalVisible, bgalert, fadeValue, message_alert, showingPreloader } = this.state;

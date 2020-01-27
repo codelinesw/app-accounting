@@ -325,6 +325,16 @@ const styles = StyleSheet.create({
     alignContent:'center',
   },
 
+  bar_balance: {
+    position:'relative',
+    top:10,
+    marginBottom:20,
+    height:45,
+    justifyContent:'flex-end',
+    alignItems:'center',
+
+  },
+
   //styles for search bar
   search_bar:{
     height:45,
@@ -363,6 +373,11 @@ const styles = StyleSheet.create({
 
   container_divider_white: {
     backgroundColor:'#ffffff',
+  },
+  container_divider_green: {
+    justifyContent:'center',
+    alignItems:'center',
+    backgroundColor:bgGreen,
   },
   panel_left: {
     width:(WIDTH-(WIDTH-62)),
@@ -669,7 +684,41 @@ const styles = StyleSheet.create({
     left:12,
     zIndex:1000,
   },
+  balancedescription: {
+    position:'relative',
+    top:25,
+    width:(WIDTH-25),
+    height:125,
+    backgroundColor:white,
+    borderRadius:6,
+    shadowOffset: {width: 13, height: 13},
+    shadowRadius: 16.00,
+    // android (Android +5.0)
+    shadowColor:'red',
+    shadowOpacity: 0.010,
+    elevation:4,
+  },
+  panelBottom: {
+    height:45,
+    backgroundColor:'transparent',
+    justifyContent:'center',
+    alignItems:'center',
+  },
+  info_balance_:{
+    width:(WIDTH-70),
+  },
+  container_payment_client: {
+    flexDirection:'row',
+    justifyContent:'space-between',
+    width:(WIDTH-25),
+    height:50,
+    
 
+  },
+
+  bgroundActive: {
+    backgroundColor:'rgba(0,0,0,0.030)',
+  }
 });
 
 

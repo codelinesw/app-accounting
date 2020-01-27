@@ -80,7 +80,7 @@ export default class AddClient extends React.Component{
 
 		  }else{
 				if(type_message[5] == "add"){
-					this.setState({message_alert:'Ah ocurrido un problema al intentar, intentelo de nuevo más tarde',bgalert:styles.bgroundYellow});
+					this.setState({message_alert:'Ah ocurrido un problema, intentelo de nuevo más tarde',bgalert:styles.bgroundYellow});
 			  	this._start();
 				}else{
 					this.setState({message_alert:'Realice algunos cambios para actualizar la informacion de este cliente',bgalert:styles.bgroundYellow});
@@ -107,12 +107,16 @@ export default class AddClient extends React.Component{
 	validateForm(){
 		const { c_client_id , c_name, c_phone, c_address } = this.state;
 			if(c_name == "" && c_phone == "" && c_address == ""){
+				this.setState({message_alert: 'Por favor complete los campos vacios.',bgalert:styles.bgroundRed});
 				this._start();
 			}else if(c_name == ""){
+				this.setState({message_alert: 'Por favor complete los campos vacios.',bgalert:styles.bgroundRed});
 				this._start();
 			}else if(c_phone == "" || c_phone == "0"){
+				this.setState({message_alert: 'Por favor complete los campos vacios.',bgalert:styles.bgroundRed});
 				this._start();
 			}else if(c_address == ""){
+				this.setState({message_alert: 'Por favor complete los campos vacios.',bgalert:styles.bgroundRed});
 				this._start();
 			}else{
 				if(c_client_id == ""){
@@ -136,14 +140,14 @@ export default class AddClient extends React.Component{
 
 	}
 	render(){
-    const { value, isLoaded, message_alert,fadeValue,bgalert } = this.state;
+    const { value, isLoaded, message_alert,fadeValue, bgalert } = this.state;
 		return(
 			  <View style={[styles.container,{backgroundColor:'white',}]}>
           <View style={[styles.headerTitle,{flexDirection:'column', justifyContent:'flex-start',textAlign:'left',alignItems:'flex-start',height:95,resizeMode: 'contain'}]}>
               <Text style={[styles.title,{fontFamily:'Poppins-Bold', marginTop:15,}]}>Añade un nuevo cliente</Text>
 			  <Text style={[styles.textlight,{fontFamily:'Poppins'}]}>En esta zona puedes agrega un nuevo cliente a tu lista</Text>
           </View>
-		  	  <Animated.View style={[styles.toast,bgalert,{opacity: fadeValue}]}>
+		  <Animated.View style={[styles.toast,bgalert,{opacity: fadeValue}]}>
           	<Text style={[styles.textwhite,{position:'relative',left:7,fontFamily:'Poppins'}]}>{message_alert}</Text>
           </Animated.View>
           <View style={[styles.body,{justifyContent:'center',alignItems:'center'}]}>
