@@ -741,7 +741,6 @@ const styles = StyleSheet.create({
     top:0,
     width:80,
     height:40,
-    flexDirection:'row',
     textAlign:'center',
     justifyContent:'center',
     alignItems:'center',
