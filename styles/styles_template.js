@@ -718,6 +718,33 @@ const styles = StyleSheet.create({
 
   bgroundActive: {
     backgroundColor:'rgba(0,0,0,0.030)',
+  },
+  //styles for container float button
+  container_float_bottom: {
+    position:'absolute',
+    bottom:40,
+    width:(WIDTH-160),
+    height:55,
+    backgroundColor:white,
+    borderRadius:15,
+    left:75,
+    right:75,
+    shadowOffset: {width: 13, height: 13},
+    shadowOpacity: 0.018,
+    shadowRadius: 16.00,
+
+    // android (Android +5.0)
+    shadowColor:'red',
+    elevation: 14,
+  },
+  btntextcenter: {
+    top:0,
+    width:80,
+    height:40,
+    flexDirection:'row',
+    textAlign:'center',
+    justifyContent:'center',
+    alignItems:'center',
   }
 });
 

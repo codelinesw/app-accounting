@@ -15,8 +15,10 @@ export default class ButtonDownload extends React.Component {
 		};
 	}	
 	downloadFile(){
+		const data = JSON.stringify(this.props.navigation.getParam('c_client_id')).replace(/\"/g,"")+'-'+JSON.stringify(this.props.navigation.getParam('s_sale_id')).replace(/\"/g,"");
+		const url = 'https://dfe34d75.ngrok.io/app-accounting/sales_/view_pdf/'+data;
 		this.setState({isLoading: true});
-	    const uri = "http://45ddd3ae.ngrok.io/Back-app-accounting/sales_/view_pdf/"
+	    const uri = url;
     	let fileUri = FileSystem.documentDirectory + "saldos-prueba.pdf";
 	    FileSystem.downloadAsync(uri, fileUri)
 	    .then(({ uri }) => {
@@ -30,10 +32,9 @@ export default class ButtonDownload extends React.Component {
 	saveFile = async (fileUri: string) => {
 	    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 	    if (status === "granted") {
-	    	this.setState({isLoading: false});
 	        const asset = await MediaLibrary.createAssetAsync(fileUri)
 	        await MediaLibrary.createAlbumAsync("Download", asset, false)
-	        
+	        this.setState({isLoading: false});
 	    }
 	}
     render() {

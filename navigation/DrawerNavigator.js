@@ -213,8 +213,14 @@ const RootStack = createStackNavigator(
    },
    ViewPdf: {
      screen:ViewPdf,
+
      navigationOptions: ({ navigation }) => ({
-       title:'View previa de los saldos de este cliente',
+       title:'Vista previa',
+       headerTitleStyle: {
+            fontSize: 16,
+            fontFamily:"Poppins",
+            top:2,
+        },
        headerRight: (
          <ButtonDownload navigation={navigation} />
        )

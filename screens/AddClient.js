@@ -48,7 +48,7 @@ export default class AddClient extends React.Component{
 	            duration: 400,
 	          }),
 	        ]),
-         ]).start();
+       ]).start();
 
 
   	};

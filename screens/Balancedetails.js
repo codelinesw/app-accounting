@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View ,Dimensions, TouchableOpacity,TouchableWithoutFeedback, Image, TextInput, FlatList, ActivityIndicator } from 'react-native';
+import { Text, View ,Dimensions, TouchableOpacity,TouchableWithoutFeedback, Image, TextInput, FlatList, ActivityIndicator, Animated } from 'react-native';
 import styles from '../styles/styles_template';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import services from "../request/services";
@@ -11,6 +11,7 @@ const HEIGHT = Dimensions.get('window').height;
 
 
 export default class Balancedetails extends React.Component{
+
   _id_ = 0;
   static deleteItems = () => {
     const { p_payment_product_id } = this.state;
@@ -34,6 +35,8 @@ export default class Balancedetails extends React.Component{
       s_sales_id: JSON.stringify(this.props.navigation.getParam('s_sale_id','0')).replace(/\"/g,""),
       bground:'',
       p_payment_product_id:0,
+      fadeValue: new Animated.Value(0),
+      bottomValue: new Animated.Value(0)
     };
     this._count_ = 0;
     this.isMounted_ = false;
@@ -78,7 +81,22 @@ export default class Balancedetails extends React.Component{
   activeElementForDelete(id){
     this._id_ = id;
     this.setState({bground:styles.bgroundActive,p_payment_product_id:id});
-    alert(id);
+    Animated.sequence([
+      Animated.parallel([
+        Animated.timing(this.state.fadeValue, {
+          toValue: 1,
+          duration: 100,
+        }),
+
+      ]),
+      Animated.delay(200),
+      Animated.parallel([
+        Animated.timing(this.state.bottomValue, {
+          toValue: 90,
+          duration: 100,
+        }),
+      ]),
+    ]).start();
   }
 
   inactiveElementForDelete(){
@@ -164,7 +182,7 @@ export default class Balancedetails extends React.Component{
   }
 
   render(){
-		const { fontsLoaded, poppins, poppinsBold, value, showing, expand, nameicon, nameorder,data } = this.state;
+		const { fontsLoaded, poppins, poppinsBold, value, showing, expand, nameicon, nameorder,data,fadeValue, bottomValue } = this.state;
     var total = 0;
       return(
         <View style={styles.container}>
@@ -223,6 +241,16 @@ export default class Balancedetails extends React.Component{
                  keyExtractor={(item,index) => {return index.toString()}}
                />
              </View>
+             <Animated.View style={[styles.container_float_bottom,{opacity: fadeValue, bottom: bottomValue}]}>
+                 <View style={[styles.btnGroup,{top:1,width:(WIDTH-180),textAlign:'center',justifyContent:'center',alignItems:'center'}]}>
+                   <TouchableOpacity style={[styles.btnwground,styles.btntextcenter,{borderRightWidth:1,borderRightColor:'#e1e1e6',width:90}]}>
+                     <FontAwesome name="edit" size={22} style={[styles.iconInput,{position:'relative',left:0,top:-2,color:'#c4cdff'}]} />
+                   </TouchableOpacity>
+                    <TouchableOpacity style={[styles.btnwground,styles.btntextcenter]}>
+                     <FontAwesome name="trash-o" size={22} style={[styles.iconInput,{position:'relative',left:-8,top:-2,color:'#c4cdff'}]} />
+                   </TouchableOpacity>
+                 </View>
+             </Animated.View>
         </View>
       );
 	}
