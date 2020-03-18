@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View ,Dimensions, TouchableOpacity,TouchableWithoutFeedback, Image, TextInput, FlatList, ActivityIndicator, Animated } from 'react-native';
+import { Text, View ,Dimensions, TouchableOpacity,TouchableWithoutFeedback, Image, TextInput, FlatList, ActivityIndicator, Animated, Alert, Modal } from 'react-native';
 import styles from '../styles/styles_template';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import services from "../request/services";
@@ -36,7 +36,13 @@ export default class Balancedetails extends React.Component{
       bground:'',
       p_payment_product_id:0,
       fadeValue: new Animated.Value(0),
-      bottomValue: new Animated.Value(0)
+      fadeValueAlert:new Animated.Value(0),
+      bottomValue: new Animated.Value(0),
+      isSelected:0,
+      message_alert: 'Por favor complete los campos vacios.',
+      bgalert:'',
+      showingPreloader:false,
+      modalVisible:false,
     };
     this._count_ = 0;
     this.isMounted_ = false;
@@ -51,7 +57,10 @@ export default class Balancedetails extends React.Component{
   }
   componentDidUpdate(prevProps, prevState) {
     if (prevState.data !== this.state.data) {
-      this.getShopping();
+      let c_client_id = JSON.stringify(prevProps.navigation.getParam('c_client_id','0')).replace(/\"/g,"");
+      let s_sales_id = JSON.stringify(prevProps.navigation.getParam('s_sale_id','0')).replace(/\"/g,"");
+      this.getShopping(c_client_id,s_sales_id);
+      
     }
   }
 
@@ -80,7 +89,7 @@ export default class Balancedetails extends React.Component{
 
   activeElementForDelete(id){
     this._id_ = id;
-    this.setState({bground:styles.bgroundActive,p_payment_product_id:id});
+    this.setState({bground:styles.bgroundActive,p_payment_product_id:id,isSelected:id});
     Animated.sequence([
       Animated.parallel([
         Animated.timing(this.state.fadeValue, {
@@ -89,7 +98,7 @@ export default class Balancedetails extends React.Component{
         }),
 
       ]),
-      Animated.delay(200),
+      Animated.delay(50),
       Animated.parallel([
         Animated.timing(this.state.bottomValue, {
           toValue: 90,
@@ -100,7 +109,23 @@ export default class Balancedetails extends React.Component{
   }
 
   inactiveElementForDelete(){
-    this.setState({bground:''});
+    this.setState({bground:styles.bgGray,isSelected:0,p_payment_product_id:0});
+    Animated.sequence([
+      Animated.parallel([
+        Animated.timing(this.state.fadeValue, {
+          toValue: 0,
+          duration: 100,
+        }),
+
+      ]),
+      Animated.delay(50),
+      Animated.parallel([
+        Animated.timing(this.state.bottomValue, {
+          toValue: 50,
+          duration: 100,
+        }),
+      ]),
+    ]).start();
   }
 
     _renderItems_(item,index,total){
@@ -117,7 +142,7 @@ export default class Balancedetails extends React.Component{
         }else{
           return (
               <TouchableWithoutFeedback onPress={() => this.inactiveElementForDelete()} onLongPress={() => this.activeElementForDelete(item.p_payment_product_id)}>
-                <View style={[styles.container_payment_client,this.state.bground]}>
+                <View style={[styles.container_payment_client,this.state.isSelected == item.p_payment_product_id ? this.state.bground : styles.bgGray]}>
                    <View style={styles.panelLeft_}>
                      <Text style={[styles.text,{fontFamily:'Poppins-Bold',marginTop:3,marginBottom:0,}]}>Abono por el siguiente valor -></Text>
                      <Text style={[styles.textlight,{fontFamily:'Poppins',top:-2,}]}>Fue realizado el {this.formatdate(item.p_date_payment)}</Text>
@@ -133,19 +158,122 @@ export default class Balancedetails extends React.Component{
       
   }
 
-  getShopping(){
+  getShopping(idc,ids){
     this.isMounted_ = true;
-    const { c_client_id, s_sales_id } = this.state;
-    let id = JSON.stringify({c_client_id: c_client_id,s_sales_id:s_sales_id});
-    services.request(routes.sales.list_id_sale,id)
-    .then(res => res.json())
-    .then(res => {
-      //alert(JSON.stringify(res));
-      if(this.isMounted_){
-        this.setState({
-          isLoaded: true,
-          data:res,
+    if((idc == "0" && ids == "0") || (idc == "" && ids == "") || (idc == null || ids == null)) {
+        const { c_client_id, s_sales_id } = this.state;
+        let id = JSON.stringify({c_client_id: c_client_id,s_sales_id:s_sales_id});
+        services.request(routes.sales.list_id_sale,id)
+        .then(res => res.json())
+        .then(res => {
+          //alert(id);
+          if(this.isMounted_){
+            this.setState({
+              isLoaded: true,
+              data:res,
+            });
+          }
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+          //alert(id);
+        }).catch(function(error) {
+          Alert.alert(
+            error.message
+          )
+         // ADD THIS THROW error
+          throw error;
         });
+    }else{
+        //alert("hello");
+        let id = JSON.stringify({ c_client_id: idc,s_sales_id:ids });
+        services.request(routes.sales.list_id_sale,id)
+        .then(res => res.json())
+        .then(res => {
+          //alert(id);
+          if(this.isMounted_){
+            this.setState({
+              isLoaded: true,
+              data:res,
+            });
+          }
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+          //alert(id);
+        }).catch(function(error) {
+          Alert.alert(
+            error.message
+          )
+         // ADD THIS THROW error
+          throw error;
+        });
+    }
+    
+  }
+
+  _start = () => {
+
+     const { fadeValueAlert } = this.state;
+     Animated.sequence([
+           Animated.parallel([
+             Animated.timing(fadeValueAlert, {
+               toValue: 1,
+               duration: 400,
+             }),
+
+           ]),
+           Animated.delay(2500),
+         Animated.parallel([
+           Animated.timing(fadeValueAlert, {
+             toValue: 0,
+             duration: 400,
+           }),
+         ]),
+     ]).start();
+
+
+     Animated.sequence([
+      Animated.parallel([
+        Animated.timing(this.state.fadeValue, {
+          toValue: 0,
+          duration: 100,
+        }),
+
+      ]),
+      Animated.delay(50),
+      Animated.parallel([
+        Animated.timing(this.state.bottomValue, {
+          toValue: 50,
+          duration: 100,
+        }),
+      ]),
+    ]).start();
+
+    };
+
+  deleteBalances(){
+    let data_ = JSON.stringify({
+      p_payment_product_id: this.state.p_payment_product_id,
+    });
+    services.request(routes.balances.delete,data_)
+    .then(res => res.text())
+    .then(res => {
+      //alert(res);
+      if(res == "ok"){
+        this.setState({message_alert:'Se ha eliminado el saldo correctamente!',bgalert:styles.bgroundGreen});
+        this._start();
+        this.setState({modalVisible:false,c_client_id:0});
+      }else{
+        this.setState({message_alert:'Ah ocurrido un error al intentar eliminar este saldo',bgalert:styles.bgroundRed});
+        this._start();
+        this.setState({modalVisible:false,c_client_id:0});
       }
     },
     (error) => {
@@ -181,11 +309,47 @@ export default class Balancedetails extends React.Component{
     }
   }
 
+  showModal(){
+    //alert('showing...');
+    this.setState({modalVisible:true});
+  }
+
+  hideModal(){
+    this.setState({modalVisible:false});
+  }
+
   render(){
-		const { fontsLoaded, poppins, poppinsBold, value, showing, expand, nameicon, nameorder,data,fadeValue, bottomValue } = this.state;
+		const { fontsLoaded, poppins, poppinsBold, value, showing, expand, nameicon, nameorder,data,fadeValue,fadeValueAlert,bottomValue,message_alert,bgalert,showingPreloader,modalVisible} = this.state;
     var total = 0;
       return(
         <View style={styles.container}>
+             <Modal
+            animationType="fade"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+            }}
+            >
+              <View style={styles.containerModal}>
+                <View style={[styles.containerOptions,styles.containerOptionsExpand]}>
+                  <Text style={[styles.title,{fontFamily:'Poppins-Bold',right:5,marginTop:4,}]}>¿Deseas Eliminar este Saldo?</Text>
+                  <Text style={[{fontFamily:'Poppins',left:5,color:'#a4a6ac'}]}>Recuerda que al aceptar,este sera borrado de este cliente</Text>
+                  <View style={styles.containerButton}>
+                    <TouchableOpacity style={[styles.btnwground,{fontFamily:'Poppins'}]} onPress={() => this.deleteBalances()}><Text style={[{fontSize:12,color:'#5c5b5e',fontFamily:'Poppins-Bold',},styles.textgreen]}>ACEPTAR</Text></TouchableOpacity>
+                    <TouchableOpacity style={[styles.btnwground,{fontFamily:'Poppins'}]} onPress={() => this.hideModal()}><Text style={[{fontSize:12,color:'#5c5b5e',fontFamily:'Poppins-Bold',},styles.textgreen]}>CANCELAR</Text></TouchableOpacity>
+                  </View>
+                </View>
+                {
+                  showingPreloader ? <View style={[styles.container_preloader,{backgroundColor:'transparent'},styles.containerOptionsExpandPreloader]}>
+                    <View style={[styles.preloader,{top:-13}]}><ActivityIndicator size="large" /></View>
+                  </View> : null
+                }
+              </View>
+            </Modal>
+            <Animated.View style={[styles.toast,bgalert,{opacity: fadeValueAlert}]}>
+              <Text style={[styles.textwhite,{position:'relative',left:7,fontFamily:'Poppins'}]}>{message_alert}</Text>
+             </Animated.View>
              <View style={[styles.container_divider,styles.container_divider_green]}>
                <View style={styles.balancedescription}>
                  <View style={[styles.panelTop,{borderTopLeftRadius:6,borderTopRightRadius:6,backgroundColor:'transparent'}]}>
@@ -243,10 +407,10 @@ export default class Balancedetails extends React.Component{
              </View>
              <Animated.View style={[styles.container_float_bottom,{opacity: fadeValue, bottom: bottomValue}]}>
                  <View style={[styles.btnGroup,{top:1,width:(WIDTH-180),textAlign:'center',justifyContent:'center',alignItems:'center'}]}>
-                   <TouchableOpacity style={[styles.btnwground,styles.btntextcenter,{borderRightWidth:1,borderRightColor:'#e1e1e6',width:90}]}>
+                   <TouchableOpacity style={[styles.btnwground,styles.btntextcenter,{borderRightWidth:1,borderRightColor:'#e1e1e6',width:90}]} onPress={() => this.props.navigation.navigate('AddBalances')}>
                      <FontAwesome name="edit" size={22} style={[styles.iconInput,{position:'relative',left:0,top:-2,color:'#c4cdff'}]} />
                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.btnwground,styles.btntextcenter]}>
+                    <TouchableOpacity style={[styles.btnwground,styles.btntextcenter]} onPress={() => this.showModal()}>
                      <FontAwesome name="trash-o" size={22} style={[styles.iconInput,{position:'relative',left:-8,top:-2,color:'#c4cdff'}]} />
                    </TouchableOpacity>
                  </View>

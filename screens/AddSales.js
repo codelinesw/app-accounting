@@ -17,7 +17,7 @@ export default class AddSales extends React.Component{
 	  	this.state = {
 		  value:'',
 		  language:'Selecciona un cliente',
-		  product:1,
+		  product:parseInt(JSON.stringify(this.props.navigation.getParam('product', '1')).replace(/\"/g,'')),
 		  productname: [
 		  	'Jean',
 		  	'Bermuda',
@@ -79,6 +79,7 @@ export default class AddSales extends React.Component{
 	   services.request(URL,data_)
 	   .then(res => res.text())
 	   .then(res => {
+	   	//alert(res);
 		  this.setState({
 		    isLoaded: false,
 		    data_:res,
@@ -271,7 +272,7 @@ export default class AddSales extends React.Component{
 								<Text style={[styles.textwhite,{fontFamily:"Poppins"}]}>Agregar</Text>
 							</TouchableOpacity>
 						</View>
-          </View>
+          			</View>
     		</View>
 			);
 	}

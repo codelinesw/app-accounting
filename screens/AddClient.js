@@ -23,6 +23,7 @@ export default class AddClient extends React.Component{
 		  message_alert: 'Por favor complete los campos vacios.',
 		  val: true,
 		  bgalert:'',
+		  isLoaded:false
 	    };
 	}
 
@@ -60,7 +61,7 @@ export default class AddClient extends React.Component{
 	sendData(URL,data_){
 	   this.setState({isLoaded:true});
 	   let response_ = false;
-		 let type_message = URL.split('/');
+	   let type_message = URL.split('/');
 	   services.request(URL,data_)
 	   .then(res => res.text())
 	   .then(res => {

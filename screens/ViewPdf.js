@@ -7,7 +7,7 @@ import PDFReader from 'rn-pdf-reader-js';
 export default class ViewPdf extends React.Component {
     render() {
         const data = JSON.stringify(this.props.navigation.getParam('c_client_id')).replace(/\"/g,"")+'-'+JSON.stringify(this.props.navigation.getParam('s_sale_id')).replace(/\"/g,"");
-        const url = 'https://dfe34d75.ngrok.io/app-accounting/sales_/view_pdf/'+data; 
+        const url = 'https://01998da7.ngrok.io/app-accounting/sales_/view_pdf/'+data; 
         return(
             <View style={{
               flex: 1,

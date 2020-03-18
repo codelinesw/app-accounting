@@ -9,7 +9,8 @@ import {
   FlatList,
   ActivityIndicator,
   Modal,
-  Animated
+  Animated,
+  RefreshControl
 } from 'react-native';
 import styles from '../styles/styles_template';
 import { Ionicons } from '@expo/vector-icons';
@@ -57,11 +58,11 @@ export default class Clients extends React.Component{
   //   }
   // }
 
-  // componentDidUpdate(nextProps, nextState){
-  //   if(this.state.data_ !== nextState.data_){
-  //     this.getClients();
-  //   }
-  // }
+  componentDidUpdate(prevProps){
+    if(this.props.data_ !== prevProps.data_){
+      this.getClients();
+    }
+  }
 
   componentDidMount(){
     this.getClients();
@@ -134,22 +135,22 @@ export default class Clients extends React.Component{
   getClients(){
     const { type } = this.state;
     const URL = (type.replace(/\"/g,'') == "TODOS") ? routes.clients.list : routes.clients.list_new;
+    this.setState({isLoaded:true});
     services.request(URL,type)
     .then(res => res.json())
     .then(res => {
       if(this.isMounted_){
-        this.setState({
-          isLoaded: true,
-          data_:res,
-        });
+        this.setState({data_:res});
         this.arrayholder = res;
       }
     },
     (error) => {
       this.setState({
-        isLoaded: true,
+        //isLoaded: false,
         error
       });
+    }).finally(() => {
+      this.setState({isLoaded:false})
     }).catch(function(error) {
       Alert.alert(
         error.message
@@ -178,7 +179,7 @@ export default class Clients extends React.Component{
     },
     (error) => {
       this.setState({
-        isLoaded: true,
+        isLoaded: false,
         error
       });
     }).catch(function(error) {
@@ -237,9 +238,15 @@ export default class Clients extends React.Component{
     this.setState({modalVisible:false});
   }
   
+  onRefresh() {
+    //Clear old data of the list
+    this.setState({ data_: [] });
+    //Call the Service to get the latest data
+    this.getClients();
+  }
 
   render(){
-    const { fontsLoaded, poppins, poppinsBold, s_value, showing, expand, nameicon, nameorder,modalVisible, bgalert, fadeValue, message_alert, showingPreloader } = this.state;
+    const { fontsLoaded, poppins, poppinsBold, s_value, showing, expand, nameicon, nameorder,modalVisible, bgalert, fadeValue, message_alert, showingPreloader, isLoaded } = this.state;
       return(
         <View style={styles.container}>
             <Modal
@@ -301,6 +308,15 @@ export default class Clients extends React.Component{
                   data={this.state.data_}
                   renderItem={({ item,index }) => this._renderItems_(item,index)}
                   keyExtractor={(item,index) => {return index.toString()}}
+                  refreshing={isLoaded}
+                  onRefresh={this.getClients}
+                  refreshControl={
+                    <RefreshControl
+                      //refresh control used for the Pull to Refresh
+                      refreshing={isLoaded}
+                      onRefresh={this.onRefresh.bind(this)}
+                    />
+                  }
                 />
                </View>
              </View>

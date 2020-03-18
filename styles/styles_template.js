@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
   	padding:10,
   	height:160,
   },
+ 
 
   bottomRight: {
   	position:'absolute',
@@ -448,8 +449,9 @@ const styles = StyleSheet.create({
 
   containerOptions: {
     position:'relative',
-    width:(WIDTH-170),
-    height:113,
+    paddingTop:4,
+    width:(WIDTH-130),
+    height:153,
     backgroundColor:white,
     borderRadius:6,
   },

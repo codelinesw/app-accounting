@@ -1,7 +1,9 @@
 import React from 'react';
-import { Text, View ,Dimensions, TouchableOpacity, Image, TextInput, Modal } from 'react-native';
+import { Text, View ,Dimensions, TouchableOpacity, Image, TextInput, Modal, ActivityIndicator, FlatList} from 'react-native';
 import styles from '../styles/styles_template';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
+import services from "../request/services";
+import routes from "../request/routes";
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
@@ -20,8 +22,106 @@ export default class Home extends React.Component{
       nameicon:'md-arrow-up',
       nameorder:'ASCENDETE',
       modalVisible:false,
+      data:[''],
+      isLoaded:false,
+      isMounted_:false
     };
     this._count_ = 0;
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.data != nextState.data){
+      //alert('Los datos han cambiado...');
+      return true;
+    }else{
+      return false;
+    } 
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.data !== this.state.data) {
+      this.getBalances();
+    }
+  }
+
+  componentDidMount(){
+    this.getBalances();
+    this.isMounted_ = true;
+  }
+
+  componentWillUnmount(){
+    this.isMounted_ = false;
+  }
+
+  moneyFormat(num){
+    num = (num == "") ? 0 : num;
+    num = (num == null) ? 0 : num;
+    num = num.toString();
+    num = num.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+    return num;
+  }
+
+  formatdate(date){
+    let newdate = date.substring(0,date.indexOf(" ")).split('-');
+    let formatdate = newdate[2]+"/"+newdate[1]+"/"+newdate[0];
+    return formatdate;
+  }
+
+  getBalances(){
+    this.isMounted_ = true;
+    services.request(routes.balances.list,0)
+    .then(res => res.json())
+    .then(res => {
+      if(this.isMounted_){
+        this.setState({
+          isLoaded: true,
+          data:res,
+        });
+      }
+    },
+    (error) => {
+      this.setState({
+        isLoaded: true,
+        error
+      });
+    }).catch(function(error) {
+      Alert.alert(
+        error.message
+      )
+     // ADD THIS THROW error
+      throw error;
+    });
+
+  }
+
+  _renderItems_(item,index){
+    let style_ = (index%2) ? styles.bgroundPurpple : styles.bgroundGreen;
+    if(item == "" || item == "undefined" || item == null){
+      return  (<View style={[styles.container_preloader,{backgroundColor:'transparent'}]}>
+        <View style={styles.preloader}><ActivityIndicator size="large" /></View>
+      </View>)
+    }else{
+      if(Object.values(item) == "empty"){
+        return (
+          <View><Text style={{fontFamily:"Poppins",}}>No hay clientes aún</Text></View>
+        )
+      }else{
+        return(
+          <View style={[styles.box_information,styles.borderYellow]}>
+             <Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>{item.c_name}</Text>
+             <Text style={[styles.text,{fontFamily:"Poppins",}]}>Prenda: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>{item.p_name}</Text></Text>
+             <Text style={[styles.text,{fontFamily:"Poppins",}]}>Cantidad: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>{item.s_count}</Text></Text>
+             <Text style={[styles.text,{fontFamily:"Poppins",}]}>Fecha: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>{this.formatdate(item.s_sale_date)}</Text></Text>
+             <Text style={[styles.text,{fontFamily:"Poppins",}]}>Valor: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>${this.moneyFormat(item.s_price)}</Text></Text>
+             <Text style={[styles.text,{fontFamily:"Poppins",}]}>Abono: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>${this.moneyFormat(item.p_payment_product)}</Text></Text>
+             <Text style={[{fontFamily:"Poppins",},styles.bottomRight]}>Saldo: <Text style={[styles.textlight,{fontFamily:"Poppins-Bold",}]}>${this.moneyFormat((parseInt(item.s_price) - parseInt(item.p_payment_product)))}</Text></Text>
+             <TouchableOpacity style={[styles.btnfavorites,{width:15,}]} onPress={() => this.showModal()}>
+                <FontAwesome name="ellipsis-v" size={14} style={{ color: '#a4a6ac' }} />
+             </TouchableOpacity>
+          </View>
+        )
+      }
+
+    }
   }
 
   onchangetext(text){
@@ -50,7 +150,11 @@ export default class Home extends React.Component{
     this.props.navigation.navigate('ViewClient');
   }
   render(){
-    const { fontsLoaded, poppins, poppinsBold, value, showing, expand, nameicon, nameorder, modalVisible } = this.state;
+      const { fontsLoaded, poppins, poppinsBold, value, showing, expand, nameicon, nameorder, modalVisible,data } = this.state;
+      var total = 0;
+      data.map((item,i) => {
+        total += parseInt(item.s_price) - parseInt(item.p_payment_product);
+      });
       return(
         <View style={styles.container}>
              <View style={styles.body_}>
@@ -66,7 +170,8 @@ export default class Home extends React.Component{
                  <View style={styles.containerOptions}>
                    <TouchableOpacity style={[styles.btnModal,{fontFamily:'Poppins'}]} onPress={this.Viewmore.bind(this)}><Text style={{fontSize:15,color:'#5c5b5e',fontFamily:'Poppins',}}>Ver más</Text></TouchableOpacity>
                    <TouchableOpacity style={[styles.btnModal,{fontFamily:'Poppins'},styles.btnTopradius]}><Text style={{fontSize:15,color:'#5c5b5e',fontFamily:'Poppins',}}>Compartir</Text></TouchableOpacity>
-                   <TouchableOpacity style={[styles.btnModal,{fontFamily:'Poppins'},styles.btnTopradius]}><Text style={{fontSize:15,color:'#5c5b5e',fontFamily:'Poppins',}}>Reportar</Text></TouchableOpacity>
+                   <TouchableOpacity style={[styles.btnModal,{fontFamily:'Poppins'},styles.btnTopradius]}><Text style={{fontSize:15,color:'#5c5b5e',fontFamily:'Poppins',}}>Editar</Text></TouchableOpacity>
+                   <TouchableOpacity style={[styles.btnModal,{fontFamily:'Poppins'},styles.btnTopradius]}><Text style={{fontSize:15,color:'#5c5b5e',fontFamily:'Poppins',}}>Eliminar</Text></TouchableOpacity>
                  </View>
                </View>
              </Modal>
@@ -124,7 +229,7 @@ export default class Home extends React.Component{
                    <Text style={[styles.textlight,{fontFamily:"Poppins",fontSize:13,}]}>Abandonado</Text>
                  </View>
                </View>
-               <View style={[styles.box_information,styles.borderGreen]}>
+               {/*<View style={[styles.box_information,styles.borderGreen]}>
                  <Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Jhon Denver Murillo Mendez</Text>
                  <Text style={[styles.text,{fontFamily:"Poppins",}]}>Prenda: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Jean</Text></Text>
                  <Text style={[styles.text,{fontFamily:"Poppins",}]}>Cantidad: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>1</Text></Text>
@@ -135,18 +240,21 @@ export default class Home extends React.Component{
                  <TouchableOpacity style={[styles.btnfavorites,{width:15,}]} onPress={() => this.showModal()}>
                     <FontAwesome name="ellipsis-v" size={14} style={{ color: '#a4a6ac' }} />
                  </TouchableOpacity>
-               </View>
-               <View style={[styles.box_information,styles.borderYellow]}>
-                 <Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Jhon Denver Murillo Mendez</Text>
-                 <Text style={[styles.text,{fontFamily:"Poppins",}]}>Prenda: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Jean</Text></Text>
-                 <Text style={[styles.text,{fontFamily:"Poppins",}]}>Cantidad: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>1</Text></Text>
-                 <Text style={[styles.text,{fontFamily:"Poppins",}]}>Fecha: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}> 9/01/2019</Text></Text>
-                 <Text style={[styles.text,{fontFamily:"Poppins",}]}>Valor: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>$80.000</Text></Text>
-                 <Text style={[styles.text,{fontFamily:"Poppins",}]}>Abono: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>$10.000</Text></Text>
-                 <Text style={[{fontFamily:"Poppins",},styles.bottomRight]}>Saldo: <Text style={[styles.textlight,{fontFamily:"Poppins-Bold",}]}>$70.000</Text></Text>
-                 <TouchableOpacity style={[styles.btnfavorites,{width:15,}]} onPress={() => this.showModal()}>
-                    <FontAwesome name="ellipsis-v" size={14} style={{ color: '#a4a6ac' }} />
-                 </TouchableOpacity>
+               </View>*/}
+               <View style={{width:WIDTH,alignItems: 'center'}}>
+                 <FlatList
+                 contentContainerStyle={{ justifyContent: 'center', alignItems:'center', }}
+                  style={{width:WIDTH}}
+                  data={data}
+                  renderItem={({ item,index }) => this._renderItems_(item,index)}
+                  keyExtractor={(item,index) => {return index.toString()}}
+                />
+                <View style={[styles.bar_show_state_,styles.bar_balance]}>
+                    <View style={[{flexDirection:'row',balignItems:'center'}]}>
+                      <Text style={[{fontFamily:"Poppins",left:3}]}>Saldo Total:</Text>
+                      <Text style={[styles.textlight,{fontFamily:"Poppins-Bold",top:-1}]}>${this.moneyFormat(total)}</Text>
+                    </View>
+                </View>
                </View>
 
              </View>

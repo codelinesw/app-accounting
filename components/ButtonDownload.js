@@ -16,7 +16,7 @@ export default class ButtonDownload extends React.Component {
 	}	
 	downloadFile(){
 		const data = JSON.stringify(this.props.navigation.getParam('c_client_id')).replace(/\"/g,"")+'-'+JSON.stringify(this.props.navigation.getParam('s_sale_id')).replace(/\"/g,"");
-		const url = 'https://dfe34d75.ngrok.io/app-accounting/sales_/view_pdf/'+data;
+		const url = 'https://01998da7.ngrok.io/app-accounting/sales_/view_pdf/'+data;
 		this.setState({isLoading: true});
 	    const uri = url;
     	let fileUri = FileSystem.documentDirectory + "saldos-prueba.pdf";
