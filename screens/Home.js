@@ -129,7 +129,7 @@ export default class Home extends React.Component{
                    </TouchableOpacity>
                    <TouchableOpacity style={[styles.card,styles.bgroundBlue]}>
                       <View style={styles.circle_image}><Image source={require('../images/PNG/004-shopping-bag.png')} style={styles.image_card} /></View>
-                      <Text style={[styles.title,{fontFamily:'Poppins-Bold',top:20,color:'white',}]}>Mis Compras</Text>
+                      <Text style={[styles.title,{fontFamily:'Poppins-Bold',top:20,color:'white',}]}>Mis Productos</Text>
                    </TouchableOpacity>
               </View>
              </View>

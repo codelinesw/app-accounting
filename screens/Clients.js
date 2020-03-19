@@ -58,11 +58,11 @@ export default class Clients extends React.Component{
   //   }
   // }
 
-  componentDidUpdate(prevProps){
-    if(this.props.data_ !== prevProps.data_){
-      this.getClients();
-    }
-  }
+  // componentDidUpdate(prevProps, prevState){
+  //   if(prevState.data_ !== this.state.data_){
+  //     this.getClients();
+  //   }
+  // }
 
   componentDidMount(){
     this.getClients();
@@ -293,7 +293,7 @@ export default class Clients extends React.Component{
                  <Ionicons name="md-search" size={30} color="#a4a6ac" style={{top:1,}}/>
                  <TextInput
                     style={[styles.inputSearch,styles.textsearch,{fontFamily:"Poppins",},expand ? styles.inputExpand : '']}
-                    onChangeText={text => this.onchangetext(text)}
+                    onChangeText={(text) => this.onchangetext(text)}
                     value={s_value}
                     placeholder="Buscas algo?"
                   />
