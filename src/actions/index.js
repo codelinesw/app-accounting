@@ -82,7 +82,7 @@ export function getProducts(products) {
 }
 
 export function setProductId(productId){
-  //console.log("ACTIONS::SET_CLIENTS_ID",productId)
+  console.log("ACTIONS::SET_CLIENTS_ID",productId)
   return {
     type: 'SET_PRODUCT_ID',
     payload: productId
@@ -115,10 +115,18 @@ export function setMessage(msg){
 
 
 export function setResponse(response){
-  console.log('ACTION:: SET_RESPONSE ', response);
+  //console.log('ACTION:: SET_RESPONSE ', response);
   return{
     type:'SET_RESPONSE',
     payload:response
+  }
+}
+
+
+export function setProducttoUpdate(product){
+  return{
+    type:'PRODUCT_TO_UPDATE',
+    payload: product
   }
 }
 // export const fetchData = (callback) => {

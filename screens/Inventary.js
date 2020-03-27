@@ -14,7 +14,9 @@ import {
   getSelectedProductId,
   message,
   response,
-  setResponse
+  setResponse,
+  setProducttoUpdate,
+  IndexProduct
 } from '../src/actions';
 import services from "../request/services";
 import routes from "../request/routes";
@@ -105,7 +107,7 @@ class Inventary extends React.Component{
           if(index > (this.state.data.length-2)){
             return(
               <View>
-                <View style={[styles.container_divider,styles.container_divider_white,this.state.IndexItem == item.p_products_id ? styles.itemSelected : styles.itemnoSelected]}>
+                <View style={[styles.container_divider,styles.container_divider_white,(this.state.IndexItem == item.p_products_id && this.props.products.IndexProduct < 9999) ? styles.itemSelected : styles.itemnoSelected]}>
                   <View style={styles.panel_left}>
                   {
                     (item.image == "" || item.image == null || item.image == "undefined" || (typeof item.image == 'undefined' || item.image == undefined)) ? <View style={[styles.avatar,styles.bgroundGreen,{display:'flex',justifyContent:'center',alignItems:'center'}]}>
@@ -132,7 +134,7 @@ class Inventary extends React.Component{
             )
         }else{
           return(
-            <View style={[styles.container_divider,styles.container_divider_white,this.state.IndexItem == item.p_products_id ? styles.itemSelected : styles.itemnoSelected]}>
+            <View style={[styles.container_divider,styles.container_divider_white,(this.state.IndexItem == item.p_products_id && this.props.products.IndexProduct < 9999) ? styles.itemSelected : styles.itemnoSelected]}>
               <View style={styles.panel_left}>
               {
                 (item.image == "" || item.image == null || item.image == "undefined" || (typeof item.image == 'undefined' || item.image == undefined)) ? <View style={[styles.avatar,styles.bgroundGreen,{display:'flex',justifyContent:'center',alignItems:'center'}]}>
@@ -142,7 +144,7 @@ class Inventary extends React.Component{
               }
               </View>
               <View style={styles.panel_right}>
-                <TouchableOpacity onPress={() => this.inactiveElementForDelete()} onLongPress={() => this.activeElementForDelete(item.p_products_id)}><Text style={[styles.title,{fontFamily:"Poppins-Bold",fontSize:14,marginTop:9,}]}>{item.p_name + " - " + "00"+index.toString()}</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => this.inactiveElementForDelete()} onLongPress={() => this.activeElementForDelete(item.p_products_id,index)}><Text style={[styles.title,{fontFamily:"Poppins-Bold",fontSize:14,marginTop:9,}]}>{item.p_name + " - " + "00"+index.toString()}</Text></TouchableOpacity>
                 <Text style={[styles.textlight,{fontFamily:"Poppins",fontSize:11,top:-2}]}>Cantidad en existencia {item.p_count}</Text>
                 <View style={{flexDirection:'row'}}>
                   <Text style={[styles.text,{fontFamily:"Poppins",fontSize:12,top:-5}]}>Precio de compra ${this.moneyFormat(item.p_price)}</Text>
@@ -221,6 +223,9 @@ class Inventary extends React.Component{
       this.props.showOptions(true);
       this.props.setIndexProduct(index);
       this.props.getSelectedProductId(id);
+      let alldata = this.props.products.products;
+      this.props.setProducttoUpdate(alldata[index]);
+      //alert(index);
     }
 
   }
@@ -229,6 +234,9 @@ class Inventary extends React.Component{
     if(this.props.products.isOptionVisible){
       this.setState({IndexItem:0});
       this.props.showOptions(false);
+      this.props.setIndexProduct(9999);
+      this.props.getSelectedProductId(0);
+      this.props.setProducttoUpdate({});
     }
   }
 
@@ -333,7 +341,9 @@ const mapDispatchToProps = {
   getSelectedProductId,
   message,
   response,
-  setResponse
+  setResponse,
+  setProducttoUpdate,
+  IndexProduct
 };
 
 export default connect( mapStateToProps , mapDispatchToProps )(Inventary)

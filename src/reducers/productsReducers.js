@@ -4,7 +4,8 @@ const initialState = {
 	isOptionVisible:false,
 	IndexProduct:0,
 	message:'',
-	response:''
+	response:'',
+	productToUpdate:['']
 };
 
 export default function productsReducer(state = initialState, action) {
@@ -25,6 +26,8 @@ export default function productsReducer(state = initialState, action) {
 			console.log('id_to_delete ',action.payload);
 			state.products.splice(action.payload,1);
 			return {...state,products:state.products}
+		case 'PRODUCT_TO_UPDATE':
+		  return {...state,productToUpdate:action.payload}	
 		case 'SET_MESSAGE':
 			return {...state,message: action.payload}
 	  case 'SET_RESPONSE':

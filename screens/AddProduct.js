@@ -12,7 +12,9 @@ import {
   addProduct,
   getSelectedProductId,
   setProductId,
-  selectProductId
+  selectProductId,
+  showOptions,
+  setIndexProduct
 } from '../src/actions'
 
 const WIDTH = Dimensions.get('window').width;
@@ -24,7 +26,7 @@ class AddClient extends React.Component{
 	  	super(props);
 	  	this.state = {
 		  value:'',
-		  p_product_id:JSON.stringify(this.props.navigation.getParam('p_product_id','0')).replace(/\"/g,''),
+		  p_product_id:JSON.stringify(this.props.navigation.getParam('p_products_id','0')).replace(/\"/g,''),
 		  p_name:JSON.stringify(this.props.navigation.getParam('p_name','')).replace(/\"/g,''),
 		  p_description:JSON.stringify(this.props.navigation.getParam('p_description','')).replace(/\"/g,''),
 		  p_product_categories_id:JSON.stringify(this.props.navigation.getParam('p_product_categories_id','')).replace(/\"/g,''),
@@ -40,7 +42,7 @@ class AddClient extends React.Component{
 		  val: true,
 		  bgalert:'',
 		  isLoaded:false,
-      image: null,
+      image: JSON.stringify(this.props.navigation.getParam('image',null)).replace(/\"/g,''),
       isLoaded:false,
       indexProduct:0,
       products:[
@@ -62,6 +64,7 @@ class AddClient extends React.Component{
 	componentDidMount(){
 		//alert(this.props.selectedClientId);
     this.getCategories();
+    //alert(JSON.stringify(this.props.navigation));
  	}
 
   _renderItems_(){
@@ -126,9 +129,9 @@ class AddClient extends React.Component{
 	   this.setState({isLoaded:true});
 	   let response_ = false;
 	   let type_message = URL.split('/');
+     //alert(JSON.stringify(data_));
 	   services.requestUpload(URL,data_)
 	   .then(res => {
-        //alert(res);
 		  this.setState({
 		    isLoaded: false,
 		  });
@@ -154,20 +157,24 @@ class AddClient extends React.Component{
 					this.setState({message_alert:'Se ha actualizado el registro correctamente!',bgalert:styles.bgroundGreen});
           let old_Data = this.props.products.products;
           let data_ = ({
-            p_products_id: tresponse[1],
+            p_products_id: this.state.p_product_id,
             p_name: this.state.p_name,
             p_description: this.state.p_description,
             p_product_categories_id: this.state.p_product_categories_id,
             p_price: this.state.p_price,
             p_sale_price: this.state.p_sale_price,
             p_count: this.state.p_count,
-            image: (response[3] == undefined || typeof response[3] == 'undefined') ? response[3] : response[2]+"-"+response[3]
+            image: (response[2] == undefined || typeof response[2] == 'undefined') ? response[2] : response[1]+"-"+response[2]
+
           });
-          old_Data[this.props.products.selectedClientId] = data_;
+          old_Data[this.props.products.IndexProduct] = data_;
           console.log(JSON.stringify(old_Data));
           this.props.setProductId(old_Data);
           this.props.getSelectedProductId(0);
           this._start();
+          this.props.showOptions(false);
+          this.props.setIndexProduct(9999);
+          alert(response);
 				}
 
 		  }else{
@@ -183,6 +190,7 @@ class AddClient extends React.Component{
 		  }
 	   },
 	   (error) => {
+      alert(error);
 		 this.setState({
 		   isLoaded: false,
 		    error
@@ -241,24 +249,32 @@ class AddClient extends React.Component{
           }else{
             uploadData.append('file',{type:'image/jpg',uri:image,name:'uploadimage.jpg'});
   					this.sendData(routes.products.add,uploadData);
+          //  alert('saving...');
           }
 
 				}else{
-          let data_ = JSON.stringify({
-            p_product_id: this.props.products.selectProductId,
-            p_name: this.state.p_name,
-            p_description: this.state.p_description,
-            p_product_categories_id: this.state.p_product_categories_id,
-            p_price: this.state.p_price,
-            p_sale_price: this.state.p_sale_price,
-            p_count: this.state.p_count,
-            image:image
-          });
+          let uploadData = new FormData();
+          uploadData.append('p_products_id',p_product_id);
+          uploadData.append('p_name',p_name);
+          uploadData.append('p_description',p_description);
+          uploadData.append('p_product_categories_id',p_product_categories_id);
+          uploadData.append('p_price',p_price);
+          uploadData.append('p_sale_price',p_sale_price);
+          uploadData.append('p_count',p_count);
 
+          //alert(image);
+          let img = (image != null || image != "") ? image.split('/') : image;
+          img = img[1] == "app-accounting" ? null : (img != null || img != "" || img == "null") ? img : null;
 
+          if((img == "" || img == null || img == "undefined")){
+  					this.sendData(routes.products.update,uploadData);
+          }else{
+            uploadData.append('file',{type:'image/jpg',uri:image,name:'uploadimage.jpg'});
+  					this.sendData(routes.products.update,uploadData);
+            //alert('saving...');
+          }
 
         //this.props.getClients(res)
-					this.sendData(routes.products.update,data_);
 					//alert('updating...');
 				}
 			}
@@ -308,6 +324,8 @@ class AddClient extends React.Component{
    		p_name, p_price,p_sale_price,p_count, p_description,image,data_,
       indexProduct
 	} = this.state;
+    let img = (image != null || image != "") ? image.split('/') : image;
+
     if(index == 0){
       return(<View style={[styles.container,{backgroundColor:'white',}]}>
         <View style={[styles.headerTitle,{flexDirection:'column', justifyContent:'flex-start',textAlign:'left',alignItems:'flex-start',height:95,resizeMode: 'contain',marginBottom:10}]}>
@@ -440,7 +458,7 @@ class AddClient extends React.Component{
             </Animated.View>
             <View style={[styles.body,{justifyContent:'center',alignItems:'center'}]}>
               <View style={[styles.input_image,{top:12,marginBottom:25}]}>
-                {image &&<Image source={{ uri: image }} style={[styles.showImage]} />}
+                {image &&<Image source={img[1] == "app-accounting" ? {uri:routes.baseurl.url+image} : (image != null || image != "") ? { uri: image } : { uri: image }} style={[styles.showImage]} />}
                 <TouchableOpacity style={styles.buttonChooseImage} onPress={() => this.chooseImage()}><FontAwesome name="image" size={62} style={[{top:0,left:0,color:'#59f090',opacity:0.7}]} /></TouchableOpacity>
               </View>
               <View style={[styles.input_group,{right:0,}]}>
@@ -527,7 +545,9 @@ const mapDispatchToProps = {
   addProduct,
   getSelectedProductId,
   setProductId,
-  selectProductId
+  selectProductId,
+  showOptions,
+  setIndexProduct
 };
 
 export default connect( mapStateToProps , mapDispatchToProps )(AddClient)

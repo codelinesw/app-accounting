@@ -14,7 +14,8 @@ import {
   deleteProductId,
   setResponse,
   setMessage,
-  getSelectedProductId
+  getSelectedProductId,
+  productToUpdate
 } from '../src/actions';
 import services from "../request/services";
 import routes from "../request/routes";
@@ -34,12 +35,9 @@ class MenuControls extends React.Component{
     let product_id = this.props.products.selectProductId;
     let data_  = new FormData();
     data_.append('p_products_id',product_id);
-    this.props.deleteProductId(index);
-
     services.requestUpload(routes.products.delete,data_)
     .then(res => {
         //delete all product with this id
-        //alert(res);
         this.props.deleteProductId(index);
         this.props.setResponse(res);
         this.props.getSelectedProductId(0);
@@ -71,11 +69,13 @@ class MenuControls extends React.Component{
   render(){
       let enable  = this.props.products.isOptionVisible;
       let screen_ = "AddProduct";
+      let _data_ = this.props.products.productToUpdate;
+      let index = this.props.products.IndexProduct;
         return(
           <View style={{display:'flex',flexDirection:'row'}}>
             {
               enable ? <View style={{display:'flex',flexDirection:'row',right:10}}>
-              <TouchableOpacity style={styles._btngray_} onPress={() => this.handleAddClient(item.c_client_id,{c_client_id:item.c_client_id,c_name:item.c_name,c_phone:item.c_phone,c_address:item.c_address,c_date:item.c_date},index)}>
+              <TouchableOpacity style={styles._btngray_} onPress={() => this.props.navigation.navigate("AddProduct",_data_)}>
                 <Text style={[styles.textlight,{fontFamily:"Poppins",right:3,top:3}]}>Editar</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles._btnwgray_]} onPress={() => this.deleteItem()}>
@@ -107,7 +107,8 @@ const mapDispatchToProps = {
   deleteProductId,
   setResponse,
   setMessage,
-  getSelectedProductId
+  getSelectedProductId,
+  productToUpdate
 };
 
 export default connect( mapStateToProps , mapDispatchToProps )(MenuControls)
