@@ -118,7 +118,7 @@ export default class Home extends React.Component{
                         <Image source={require('../images/PNG/001-taxes.png')} style={styles.image_card} />
                       </View>
                       <Text style={[styles.title,{fontFamily:'Poppins-Bold',top:20,color:'white',}]}>Mis Cuentas</Text>
-                    </TouchableOpacity> 
+                    </TouchableOpacity>
                     <TouchableOpacity style={[styles.card,styles.bgroundYellow]} onPress={() => this.props.navigation.navigate('Clients')}>
                     <View style={styles.circle_image}><Image source={require('../images/PNG/002-target.png')} style={styles.image_card} /></View>
                     <Text style={[styles.title,{fontFamily:'Poppins-Bold',top:20,color:'white',}]}>Mis Clientes</Text>
@@ -127,9 +127,9 @@ export default class Home extends React.Component{
                       <View style={styles.circle_image}><Image source={require('../images/PNG/003-paper-plane.png')} style={styles.image_card} /></View>
                       <Text style={[styles.title,{fontFamily:'Poppins-Bold',top:20,color:'white',}]}>Saldos Pendientes</Text>
                    </TouchableOpacity>
-                   <TouchableOpacity style={[styles.card,styles.bgroundBlue]}>
+                   <TouchableOpacity style={[styles.card,styles.bgroundBlue]} onPress={() => this.props.navigation.navigate('Inventary')}>
                       <View style={styles.circle_image}><Image source={require('../images/PNG/004-shopping-bag.png')} style={styles.image_card} /></View>
-                      <Text style={[styles.title,{fontFamily:'Poppins-Bold',top:20,color:'white',}]}>Mis Productos</Text>
+                      <Text style={[styles.title,{fontFamily:'Poppins-Bold',top:20,color:'white',}]}>Mi Inventario</Text>
                    </TouchableOpacity>
               </View>
              </View>

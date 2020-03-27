@@ -11,7 +11,7 @@ const HEIGHT = Dimensions.get('window').height;
 
 
 export default class AddBalances extends React.Component{
-	
+
 	 constructor(props) {
   		super(props);
 	  	this.state = {
@@ -29,9 +29,9 @@ export default class AddBalances extends React.Component{
 		  datesale: '',
 		  date: new Date(),
 		  mode: 'datetime',
-      	  show: false,
-      	  isDateTimePickerVisible: false,
-      	  fadeValue: new Animated.Value(0),
+      show: false,
+      isDateTimePickerVisible: false,
+      fadeValue: new Animated.Value(0),
 		  message_alert: 'Por favor complete los campos vacios.',
 		  bgalert:'',
 	    };
@@ -47,7 +47,7 @@ export default class AddBalances extends React.Component{
   //     return false;
   //   }
 
-  //   //return false; 
+  //   //return false;
   // }
   componentDidUpdate(prevProps, prevState) {
     if (prevState.sales !== this.state.sales) {
@@ -124,7 +124,7 @@ export default class AddBalances extends React.Component{
 	    let _id_ = c_client_id.replace(/\"/g,'');
 	    _id_ = (parseInt(_id_) > 0 ) ? _id_ : 'Selecciona un cliente';
 	    let _data_ = JSON.stringify({c_client_id: _id_});
-	    services.request(routes.sales.list_id,_data_)
+	    services.requestGet(routes.sales.list_id,_data_)
 	    .then(res => res.json())
 	    .then(res => {
 	      if(this.isMounted_){
@@ -156,7 +156,7 @@ export default class AddBalances extends React.Component{
 		//alert(c_client_id + ' - ' + s_sales_id + ' - ' + amt + ' - ' + _date_);
 	    let _data_ = JSON.stringify({c_client_id: c_client_id,s_sales_id:s_sales_id,amount:amt,p_date_payment:_date_});
 	    let type_message = routes.balances.add.split('/');
-	    services.request(routes.balances.add,_data_)
+	    services.requestSet(routes.balances.add,_data_)
 	    .then(res => res.text())
 	    .then(res => {
 	      if(this.isMounted_){
@@ -198,7 +198,7 @@ export default class AddBalances extends React.Component{
 	     // ADD THIS THROW error
 	      throw error;
 	    });
-	}    
+	}
 
 	onChangeText(text){
 		this.setState({value:text});
@@ -239,8 +239,8 @@ export default class AddBalances extends React.Component{
 		this.setState({c_client_id: itemValue,c_name_:itemIndex});
 		this.getSales();
 	}
-								  
-								
+
+
 	render(){
     const { clients, c_client_id, s_sales_id, amt, datepayment, value, c_name_, sales, countSale,date, datesale, show, mode, bgalert, fadeValue, message_alert, isLoaded } = this.state;
     	let client = (c_name_ == "Selecciona un cliente") ? 0 : (c_name_-1),
@@ -255,7 +255,7 @@ export default class AddBalances extends React.Component{
           	<Text style={[styles.textwhite,{position:'relative',left:7,fontFamily:'Poppins'}]}>{message_alert}</Text>
           </Animated.View>
           <View style={[styles.body,{justifyContent:'center',alignItems:'center'}]}>
-			
+
 						<View style={styles.input_group}>
 							<View style={[styles.input_text,{fontFamily:'Poppins',},styles.textlight]}>
 							<Ionicons

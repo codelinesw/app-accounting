@@ -35,7 +35,7 @@ export default class Home extends React.Component{
       return true;
     }else{
       return false;
-    } 
+    }
   }
   componentDidUpdate(prevProps, prevState) {
     if (prevState.data !== this.state.data) {
@@ -68,8 +68,7 @@ export default class Home extends React.Component{
 
   getBalances(){
     this.isMounted_ = true;
-    services.request(routes.balances.list,0)
-    .then(res => res.json())
+    services.requestGet(routes.balances.list,0)
     .then(res => {
       if(this.isMounted_){
         this.setState({

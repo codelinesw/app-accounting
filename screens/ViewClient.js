@@ -52,7 +52,7 @@ export default class Home extends React.Component{
       return true;
     }else{
       return false;
-    } 
+    }
   }
   componentDidUpdate(prevProps, prevState) {
     if (prevState.data !== this.state.data) {
@@ -124,7 +124,7 @@ export default class Home extends React.Component{
     this.props.navigation.navigate('Balancedetails',data);
 
   }
-  
+
   moneyFormat(num){
     num = (num == "") ? 0 : num;
     num = (num == null) ? 0 : num;
@@ -190,10 +190,10 @@ export default class Home extends React.Component{
               </View>
             );
           }
-          
+
         }
       }
-      
+
   }
 
   getShopping(id){
@@ -201,8 +201,7 @@ export default class Home extends React.Component{
     if((id == "" || id == "0") || id == null){
         const { c_client_id } = this.state;
         let _id_ = JSON.stringify({c_client_id: c_client_id});
-        services.request(routes.sales.list_id,_id_)
-        .then(res => res.json())
+        services.requestGet(routes.sales.list_id,_id_)
         .then(res => {
           if(this.isMounted_){
             this.setState({
@@ -223,10 +222,10 @@ export default class Home extends React.Component{
          // ADD THIS THROW error
           throw error;
         });
-      
+
     }else{
       let id_ = JSON.stringify({c_client_id: id});
-      services.request(routes.sales.list_id,id_)
+      services.requestGet(routes.sales.list_id,id_)
       .then(res => res.json())
       .then(res => {
         if(this.isMounted_){
@@ -296,7 +295,7 @@ export default class Home extends React.Component{
     let data_ = JSON.stringify({
       s_sales_id: this.state.s_sales_id,
     });
-    services.request(routes.sales.delete,data_)
+    services.requestSet(routes.sales.delete,data_)
     .then(res => res.text())
     .then(res => {
       //alert(res);
@@ -363,7 +362,7 @@ export default class Home extends React.Component{
     var total = 0;
     data.map((item,i) => {
       total += parseInt(item.price) - parseInt(item.p_payment_product);
-    });  
+    });
       return(
         <View style={styles.container}>
              <Modal

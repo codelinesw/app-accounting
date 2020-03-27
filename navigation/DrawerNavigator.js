@@ -16,6 +16,8 @@ import DownloadFile from "../screens/DownloadFile";
 import Home from "../screens/Home";
 import AddClient from "../screens/AddClient";
 import AddSales from "../screens/AddSales";
+import Inventary from "../screens/Inventary";
+import AddProduct from "../screens/AddProduct";
 import Clients from '../screens/Clients';
 import Accounting from '../screens/Accounting';
 import Messages from '../screens/Messages';
@@ -116,8 +118,10 @@ const RootStack = createStackNavigator(
       screen:AddClient,
       navigationOptions: ({ navigation }) => ({
         title:'Agrega un cliente',
+
       })
     },
+
     Clients: {
       screen:TabClients,
       navigationOptions: ({navigation}) => ({
@@ -161,9 +165,6 @@ const RootStack = createStackNavigator(
         headerLeft: (
           <ButtonMenu navigation={navigation}/>
         ),
-        headerRight: (
-          <ButtonAdd typeButton="AddBalances" navigation={navigation} />
-        ),
         headerTitleStyle: {
           fontFamily: "Poppins",
         }
@@ -190,7 +191,7 @@ const RootStack = createStackNavigator(
          <ButtonDelete navigation={navigation} />
         ),
       }),
-      
+
     },
    Accounting: {
      screen:TabAccounting,
@@ -228,7 +229,18 @@ const RootStack = createStackNavigator(
    },
    DownloadFile: {
      screen:DownloadFile,
-   }
+   },
+   Inventary: {
+     screen: Inventary,
+   },
+
+   AddProduct: {
+     screen:AddProduct,
+     navigationOptions: ({ navigation }) => ({
+       title:'Agrega un producto',
+
+     })
+   },
 
   },
 
@@ -294,6 +306,9 @@ const DrawerNavigator = createDrawerNavigator(
    },
    DownloadFile: {
      screen:DownloadFile,
+   },
+   Inventary: {
+     screen: Inventary
    }
 
   },

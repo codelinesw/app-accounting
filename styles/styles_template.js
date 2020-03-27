@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   	padding:10,
   	height:160,
   },
- 
+
 
   bottomRight: {
   	position:'absolute',
@@ -196,6 +196,16 @@ const styles = StyleSheet.create({
   	marginRight:8,
   },
 
+  _btngray_: {
+  	position:'relative',
+  	width:55,
+  	padding:3,
+  	borderRadius:6,
+  	backgroundColor:btnGray,
+  	color:dark,
+  	marginRight:8,
+  },
+
   btnExpand: {
   	position:'relative',
   	width:(WIDTH-35),
@@ -223,12 +233,34 @@ const styles = StyleSheet.create({
   	color:dark,
   },
 
+  _btnwgray_: {
+  	position:'relative',
+    padding:3,
+  	paddingRight:12,
+  	borderRadius:6,
+  	backgroundColor:white,
+  	borderWidth:2,
+  	borderColor:btnGray,
+  	color:dark,
+  },
+
   btnwgreen: {
   	position:'relative',
   	padding:5,
   	paddingRight:12,
   	borderRadius:6,
   	backgroundColor:white,
+  	borderWidth:2,
+  	borderColor:bgGreen,
+  	color:bgGreen,
+  },
+
+  _btngreen_: {
+  	position:'relative',
+    padding:3,
+  	paddingRight:12,
+  	borderRadius:6,
+    backgroundColor:white,
   	borderWidth:2,
   	borderColor:bgGreen,
   	color:bgGreen,
@@ -333,6 +365,15 @@ const styles = StyleSheet.create({
     height:45,
     justifyContent:'flex-end',
     alignItems:'center',
+
+  },
+
+  bar_bnobottom:{
+    width:WIDTH,
+    marginBottom:5,
+    backgroundColor:'white',
+    elevation:0,
+    height:20
 
   },
 
@@ -474,7 +515,7 @@ const styles = StyleSheet.create({
     padding:8,
     borderRadius:6,
     backgroundColor:'rgba(255,255,255,0.7)',
-    
+
   },
 
   containerButton: {
@@ -559,8 +600,8 @@ const styles = StyleSheet.create({
   },
 
   icon_link: {
-    width:25,
-    height:25,
+    width:28,
+    height:28,
   },
 
   link_text:{
@@ -714,7 +755,7 @@ const styles = StyleSheet.create({
     justifyContent:'space-between',
     width:(WIDTH-25),
     height:50,
-    
+
 
   },
 
@@ -746,6 +787,71 @@ const styles = StyleSheet.create({
     textAlign:'center',
     justifyContent:'center',
     alignItems:'center',
+  },
+
+  //styles for input that choose picture
+  input_image: {
+    position:'relative',
+    width:290,
+    height:190,
+    borderWidth:2,
+    borderColor:light,
+    marginHorizontal:'15%',
+    marginBottom: 15,
+    borderRadius:5,
+    justifyContent:'center',
+    alignItems:'center',
+
+  },
+  buttonChooseImage:{
+    position:'absolute',
+    width:120,
+    height:120,
+    justifyContent:'center',
+    alignItems:'center',
+    zIndex:2
+
+  },
+  showImage:{
+    position:'relative',
+    width: 160,
+    height: 130
+  },
+  itemSelected: {
+    backgroundColor:'rgba(0,0,0,0.15)'
+  },
+  itemnoSelected: {
+    backgroundColor:'white'
+  },
+
+  containerBarProgress:{
+    position:'relative',
+    top:-20,
+    width:(WIDTH-20),
+    left:10,
+    right:10,
+    height:50,
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'center',
+    alignContent:'center',
+  },
+
+  bar:{
+    position:'relative',
+    top:15,
+    width:'33%',
+    height:6,
+    backgroundColor:'#D6D6E4',
+    borderRadius:5,
+  },
+
+  bardos:{
+    width:'25%'
+  },
+
+  baractive:{
+    backgroundColor:bgGreen
   }
 });
 

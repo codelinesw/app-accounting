@@ -1,7 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import * as Font from 'expo-font';
-import AppContainer from "./navigation/DrawerNavigator";
+import AppContainer from './navigation/DrawerNavigator';
+import { Provider } from 'react-redux';
+import { createStore , applyMiddleware  } from 'redux';
+import Reducers from './src/reducers';
 
 export default class App extends React.Component {
   constructor(props){
@@ -22,7 +25,7 @@ export default class App extends React.Component {
   }
   render(){
     if(this.state.fontsLoaded){
-      return <AppContainer/>
+      return (<Provider store={createStore(Reducers,applyMiddleware())}><AppContainer/></Provider>)
     }else{
       return <Text>Loading</Text>
     }

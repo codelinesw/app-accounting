@@ -17,10 +17,18 @@ import { Ionicons } from '@expo/vector-icons';
 import ButtonMenu from "../components/ButtonMenu";
 import services from "../request/services";
 import routes from "../request/routes";
+import { connect } from 'react-redux';
+import {
+  getClients,
+  getSelectedClientId,
+  setClientId,
+  deleteClientId
+} from '../src/actions'
+
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
-export default class Clients extends React.Component{
+class Clients extends React.Component{
 
   constructor(props){
     super(props);
@@ -44,31 +52,18 @@ export default class Clients extends React.Component{
       bgalert:'',
       showingPreloader:false,
       c_client_id:0,
+      indexItem:0
     };
     this._count_ = 0;
     this.isMounted_ = false;
     this.arrayholder = [];
   }
 
-  // shouldComponentUpdate(nextProps, nextState){
-  //   if(this.state.data_ !== nextState.data_){
-  //     return true;
-  //   }else{
-  //     return false;
-  //   }
-  // }
-
-  // componentDidUpdate(prevProps, prevState){
-  //   if(prevState.data_ !== this.state.data_){
-  //     this.getClients();
-  //   }
-  // }
-
   componentDidMount(){
     this.getClients();
     //this.makeRemoteRequest();
     this.isMounted_ = true;
-    
+
   }
 
   componentWillUnmount(){
@@ -76,45 +71,47 @@ export default class Clients extends React.Component{
   }
 
   _start = () => {
-
 	   const { fadeValue } = this.state;
      Animated.sequence([
-           Animated.parallel([
-             Animated.timing(fadeValue, {
-               toValue: 1,
-               duration: 400,
-             }),
-
-           ]),
-           Animated.delay(2500),
+         Animated.parallel([
+            Animated.timing(fadeValue, {
+              toValue: 1,
+              duration: 400,
+            }),
+         ]),
+         Animated.delay(2500),
          Animated.parallel([
            Animated.timing(fadeValue, {
              toValue: 0,
              duration: 400,
            }),
          ]),
-        ]).start();
-
-  	};
+     ]).start();
+  };
 
   onchangetext(text){
     text = text.toString();
     if(text.trim().length > 0){
       this.setState({s_value:text,showing:true,expand:false});
-      const newData = this.state.data_.filter(item => {
+      const newData = this.props.clients.data.filter(item => {
         let itemData = `${item.c_name}`;
         return itemData.indexOf(text) > -1;
       });
       if(JSON.stringify(newData)=='{}'){
         this.getClients();
       }else{
-        this.setState({ data_: newData});
+        this.props.setClientId(newData);
       }
     }else{
       this.setState({s_value:text,showing:false,expand:true});
       this.getClients();
     }
 
+  }
+
+  clearInputSearch(){
+    this.setState({s_value:'',showing:false,expand:true});
+    this.getClients();
   }
   changeOrder(){
     if(this._count_ == 0){
@@ -136,11 +133,12 @@ export default class Clients extends React.Component{
     const { type } = this.state;
     const URL = (type.replace(/\"/g,'') == "TODOS") ? routes.clients.list : routes.clients.list_new;
     this.setState({isLoaded:true});
-    services.request(URL,type)
-    .then(res => res.json())
+    services.requestGet(URL,type)
     .then(res => {
+      //alert(res);
       if(this.isMounted_){
-        this.setState({data_:res});
+        //this.setState({data_:res});
+        this.props.getClients(res);
         this.arrayholder = res;
       }
     },
@@ -152,9 +150,10 @@ export default class Clients extends React.Component{
     }).finally(() => {
       this.setState({isLoaded:false})
     }).catch(function(error) {
-      Alert.alert(
+      alert(
         error.message
-      )
+      );
+
      // ADD THIS THROW error
       throw error;
     });
@@ -164,12 +163,12 @@ export default class Clients extends React.Component{
     let data_ = JSON.stringify({
       c_client_id: this.state.c_client_id,
     });
-    services.request(routes.clients.delete,data_)
-    .then(res => res.text())
+    services.requestSet(routes.clients.delete,data_)
     .then(res => {
       if(res == "ok"){
 		  	this.setState({message_alert:'Se ha eliminado el cliente correctamente!',bgalert:styles.bgroundGreen});
-		  	this._start();
+        this.props.deleteClientId(this.state.indexItem);
+        this._start();
         this.setState({modalVisible:false,c_client_id:0});
 		  }else{
 		  	this.setState({message_alert:'Ah ocurrido un error al intentar eliminar este cliente',bgalert:styles.bgroundRed});
@@ -183,7 +182,7 @@ export default class Clients extends React.Component{
         error
       });
     }).catch(function(error) {
-      Alert.alert(
+      alert(
         error.message
       )
      // ADD THIS THROW error
@@ -191,7 +190,13 @@ export default class Clients extends React.Component{
     });
   }
 
+  handleAddClient = (selectedId,data,indexItem)=>{
+    this.props.getSelectedClientId(indexItem);
+    this.props.navigation.navigate('AddClient',data);
+  }
+
   _renderItems_(item,index){
+    //alert(JSON.stringify(item));
     let style_ = (index%2) ? styles.bgroundPurpple : styles.bgroundGreen;
     if(item == "" || item == "undefined" || item == null){
       return  (<View style={[styles.container_preloader,{backgroundColor:'transparent'}]}>
@@ -203,6 +208,7 @@ export default class Clients extends React.Component{
           <View><Text style={{fontFamily:"Poppins",}}>No hay clientes aún</Text></View>
         )
       }else{
+        //index > (this.state.data.length-2)
         return(
           <View style={[styles.box_information,styles.expand_box_information]}>
             <View style={{flexDirection:'row'}}>
@@ -210,12 +216,12 @@ export default class Clients extends React.Component{
               <TouchableOpacity onPress={() => this.props.navigation.navigate('ViewClient',{c_client_id:item.c_client_id,c_name:item.c_name,c_phone:item.c_phone})}><Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>{item.c_name}</Text></TouchableOpacity>
             </View>
             <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>(+57) {item.c_phone}</Text>
-            <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Jhon es un cliente que le gusta hacer compras constantemente de jeans</Text>
+            <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>{item.c_name.substring(0,item.c_name.indexOf(" "))} es un cliente que le gusta hacer compras constantemente de jeans</Text>
             <View style={styles.btnGroup}>
-              <TouchableOpacity style={styles.btngray} onPress={() => this.props.navigation.navigate('AddClient',{c_client_id:item.c_client_id,c_name:item.c_name,c_address:item.c_address,c_phone:item.c_phone})}>
+              <TouchableOpacity style={styles.btngray} onPress={() => this.handleAddClient(item.c_client_id,{c_client_id:item.c_client_id,c_name:item.c_name,c_phone:item.c_phone,c_address:item.c_address,c_date:item.c_date},index)}>
                 <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Editar</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.btnwgray} onPress={() => this.showModal(item.c_client_id)}>
+              <TouchableOpacity style={styles.btnwgray} onPress={() => this.showModal(item.c_client_id,index)}>
                 <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Eliminar</Text>
               </TouchableOpacity>
             </View>
@@ -230,14 +236,14 @@ export default class Clients extends React.Component{
     }
   }
 
-  showModal(id){
-    this.setState({modalVisible:true,c_client_id:id});
+  showModal(id,indexItem_){
+    this.setState({modalVisible:true,c_client_id:id,indexItem:indexItem_});
   }
 
   hideModal(){
     this.setState({modalVisible:false});
   }
-  
+
   onRefresh() {
     //Clear old data of the list
     this.setState({ data_: [] });
@@ -246,6 +252,7 @@ export default class Clients extends React.Component{
   }
 
   render(){
+    //alert(JSON.stringify(this.props));
     const { fontsLoaded, poppins, poppinsBold, s_value, showing, expand, nameicon, nameorder,modalVisible, bgalert, fadeValue, message_alert, showingPreloader, isLoaded } = this.state;
       return(
         <View style={styles.container}>
@@ -297,15 +304,15 @@ export default class Clients extends React.Component{
                     value={s_value}
                     placeholder="Buscas algo?"
                   />
-                  {showing ? <TouchableOpacity style={[styles.btnfavorites,styles.btndeletetext]}>
+                  {showing ? <TouchableOpacity style={[styles.btnfavorites,styles.btndeletetext]} onPress={() => this.clearInputSearch()}>
                     <Ionicons name="md-close" color="#a4a6ac" size={22} />
                  </TouchableOpacity> : null}
                </View>
                <View style={{width:WIDTH,alignItems: 'center'}}>
                  <FlatList
-                 contentContainerStyle={{ justifyContent: 'center', alignItems:'center', }}
+                 contentContainerStyle={{ justifyContent: 'center', alignItems:'center' ,paddingBottom:60}}
                   style={{width:WIDTH}}
-                  data={this.state.data_}
+                  data={this.props.clients.data}
                   renderItem={({ item,index }) => this._renderItems_(item,index)}
                   keyExtractor={(item,index) => {return index.toString()}}
                   refreshing={isLoaded}
@@ -325,3 +332,18 @@ export default class Clients extends React.Component{
       );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    clients: state.data
+  }
+}
+
+const mapDispatchToProps = {
+  getClients,
+  getSelectedClientId,
+  setClientId,
+  deleteClientId
+};
+
+export default connect( mapStateToProps , mapDispatchToProps )(Clients)

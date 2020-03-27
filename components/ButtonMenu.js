@@ -6,13 +6,13 @@ import { Ionicons } from '@expo/vector-icons';
 export default class ButtonMenu extends React.Component{
 	showAlert(){
 		Alert.alert(
-			'Hello, Jhon how are you!'	
+			'Hello, Jhon how are you!'
 		)
 	}
 	render(){
 		return(
 
-			<TouchableOpacity 
+			<TouchableOpacity
 			style={styles.menuIcon}
 			onPress={() => this.props.navigation.toggleDrawer()}
 			>
@@ -36,8 +36,8 @@ const styles = StyleSheet.create({
 		top:0,
 		left:5,
 		padding:10,
-		
+
 	},
 
-	
+
 });

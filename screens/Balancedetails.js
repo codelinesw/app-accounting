@@ -17,7 +17,7 @@ export default class Balancedetails extends React.Component{
     const { p_payment_product_id } = this.state;
     alert('handle press ->  ' + this.state.p_payment_product_id);
   }
-  
+
   constructor(props){
     super(props);
 
@@ -53,14 +53,14 @@ export default class Balancedetails extends React.Component{
       return true;
     }else{
       return false;
-    } 
+    }
   }
   componentDidUpdate(prevProps, prevState) {
     if (prevState.data !== this.state.data) {
       let c_client_id = JSON.stringify(prevProps.navigation.getParam('c_client_id','0')).replace(/\"/g,"");
       let s_sales_id = JSON.stringify(prevProps.navigation.getParam('s_sale_id','0')).replace(/\"/g,"");
       this.getShopping(c_client_id,s_sales_id);
-      
+
     }
   }
 
@@ -155,7 +155,7 @@ export default class Balancedetails extends React.Component{
             );
         }
       }
-      
+
   }
 
   getShopping(idc,ids){
@@ -163,8 +163,7 @@ export default class Balancedetails extends React.Component{
     if((idc == "0" && ids == "0") || (idc == "" && ids == "") || (idc == null || ids == null)) {
         const { c_client_id, s_sales_id } = this.state;
         let id = JSON.stringify({c_client_id: c_client_id,s_sales_id:s_sales_id});
-        services.request(routes.sales.list_id_sale,id)
-        .then(res => res.json())
+        services.requestGet(routes.sales.list_id_sale,id)
         .then(res => {
           //alert(id);
           if(this.isMounted_){
@@ -190,8 +189,7 @@ export default class Balancedetails extends React.Component{
     }else{
         //alert("hello");
         let id = JSON.stringify({ c_client_id: idc,s_sales_id:ids });
-        services.request(routes.sales.list_id_sale,id)
-        .then(res => res.json())
+        services.requestGet(routes.sales.list_id_sale,id)
         .then(res => {
           //alert(id);
           if(this.isMounted_){
@@ -215,7 +213,7 @@ export default class Balancedetails extends React.Component{
           throw error;
         });
     }
-    
+
   }
 
   _start = () => {
@@ -262,8 +260,7 @@ export default class Balancedetails extends React.Component{
     let data_ = JSON.stringify({
       p_payment_product_id: this.state.p_payment_product_id,
     });
-    services.request(routes.balances.delete,data_)
-    .then(res => res.text())
+    services.requestSet(routes.balances.delete,data_)
     .then(res => {
       //alert(res);
       if(res == "ok"){

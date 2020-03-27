@@ -76,7 +76,7 @@ export default class AddSales extends React.Component{
 	   this.setState({isLoaded:true});
 	   let response_ = false;
 	   let type_message = URL.split('/');
-	   services.request(URL,data_)
+	   services.requestSet(URL,data_)
 	   .then(res => res.text())
 	   .then(res => {
 	   	//alert(res);
@@ -188,7 +188,7 @@ export default class AddSales extends React.Component{
 	timepicker = () => {
 	  this.show('time');
 	}
-	
+
 	render(){
     const { qty, product, product_id, productname, date, datesale, show, mode, bgalert, fadeValue, message_alert, price } = this.state;
 		return(

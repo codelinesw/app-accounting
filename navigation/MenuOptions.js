@@ -30,9 +30,9 @@ export default class MenuOptions extends React.Component {
               <Image source={require('../images/sale.png')} style={styles.icon_link} />
               <Text style={[styles.link_text,{fontFamily:'Poppins',}]}>Saldos</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.link_navigation} onPress={() => this.props.navigation.navigate('ViewClient')}>
+            <TouchableOpacity style={styles.link_navigation} onPress={() => this.props.navigation.navigate('Inventary')}>
               <Image source={require('../images/product.png')} style={[styles.icon_link,{top:-5,width:28,height:28}]} />
-              <Text style={[styles.link_text,{fontFamily:'Poppins',}]}>Productos</Text>
+              <Text style={[styles.link_text,{fontFamily:'Poppins',}]}>Inventario</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.panel_configuration}>
