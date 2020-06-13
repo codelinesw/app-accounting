@@ -1,16 +1,42 @@
 import React from 'react';
-import { Text, View ,Dimensions, TouchableOpacity, Image, TextInput, FlatList, ActivityIndicator, Animated, Modal, Alert } from 'react-native';
+import { Text, View ,Dimensions, TouchableOpacity, Image, TextInput, FlatList, RefreshControl, ActivityIndicator, Animated, Modal, Alert } from 'react-native';
 import styles from '../styles/styles_template';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import services from "../request/services";
 import routes from "../request/routes";
-
+import { connect } from 'react-redux';
+import {
+  getBalanceToClients,
+  setIndexBalanceToClient,
+  setSelectedBalanceToClientId,
+  message,
+  response,
+  setResponse,
+  setBalanceToClientToUpdate,
+  IndexBalance,
+  deleteBalanceToClientId
+} from '../src/actions';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
 
-export default class Home extends React.Component{
+class ViewClient extends React.Component{
+
+  static navigationOptions = ({ navigation, screenProps }) => ({
+    title:'Saldos',
+    headerTitleStyle: {
+      fontSize: 17,
+      fontFamily:"Poppins",
+      top:2,
+      right:10
+    },
+    headerRight:(
+      <TouchableOpacity style={[styles._btngreen_,{right:10}]} onPress={() => navigation.navigate("AddSales",{c_client_id:JSON.stringify(navigation.getParam('c_client_id','0')).replace(/\"/g,'')})}>
+        <Text style={[styles.textgreen,{fontFamily:"Poppins",left:5}]}>Añadir</Text>
+      </TouchableOpacity>
+    )
+  });
 
   constructor(props){
     super(props);
@@ -41,24 +67,11 @@ export default class Home extends React.Component{
       product:1,
       qty:1,
       price:0,
-      datesale:''
+      datesale:'',
+      isLoaded:false
     };
     this._count_ = 0;
     this.isMounted_ = false;
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    if (this.state.data != nextState.data){
-      //alert('Los datos han cambiado...');
-      return true;
-    }else{
-      return false;
-    }
-  }
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.data !== this.state.data) {
-      let c_client_id = JSON.stringify(prevProps.navigation.getParam('c_client_id','')).replace(/\"/g,'');
-      this.getShopping(c_client_id);
-    }
   }
 
   componentDidMount(){
@@ -70,7 +83,7 @@ export default class Home extends React.Component{
     this.isMounted_ = false;
   }
 
-  activeElementForDelete(id,p_product_id,s_count,s_sale_date,price){
+  activeElementForDelete(id,p_product_id,s_count,s_sale_date,price,index){
 
     this._id_ = id;
     this.setState({
@@ -83,6 +96,7 @@ export default class Home extends React.Component{
       price:price
     });
 
+    this.props.setIndexBalanceToClient(index);
 
     Animated.sequence([
       Animated.parallel([
@@ -141,7 +155,6 @@ export default class Home extends React.Component{
 
     _renderItems_(item,index,total){
       let balance = 0;
-
       if(item == "" || item == "undefined" || item == null){
           return  (<View style={[styles.container_preloader,{backgroundColor:'transparent'}]}>
               <View style={styles.preloader}><ActivityIndicator size="large" /></View>
@@ -159,7 +172,7 @@ export default class Home extends React.Component{
               <View>
                 <View style={[styles.box_information,styles.borderGreen,styles.select_box_information,]}>
                   <FontAwesome name="check-circle" size={19} style={[{position:'absolute',right:10,top:10, color:'#59f090'},this.state.isSelected == item.s_sales_id ? {opacity:1} : {opacity:0}]} />
-                  <TouchableOpacity onPress={() => this.inactiveElementForDelete({c_client_id:item.c_client_id,c_name:item.c_name,s_sale_id:item.s_sales_id,description:item.s_description,date:item.s_sale_date,balance:(parseInt(item.price) - parseInt(item.p_payment_product)),}) } onLongPress={() => this.activeElementForDelete(item.s_sales_id,item.p_products_id,item.s_count,item.s_sale_date,item.price)}><Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Compra</Text></TouchableOpacity>
+                  <TouchableOpacity onPress={() => this.inactiveElementForDelete({c_client_id:item.c_client_id,c_name:item.c_name,s_sale_id:item.s_sales_id,description:item.s_description,date:item.s_sale_date,balance:(parseInt(item.price) - parseInt(item.p_payment_product)),}) } onLongPress={() => this.activeElementForDelete(item.s_sales_id,item.p_products_id,item.s_count,item.s_sale_date,item.price,index)}><Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Compra</Text></TouchableOpacity>
                   <Text style={[styles.text,{fontFamily:"Poppins",}]}>Prenda: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>{item.p_name}</Text></Text>
                   <Text style={[styles.text,{fontFamily:"Poppins",}]}>Cantidad: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>{item.s_count}</Text></Text>
                   <Text style={[styles.text,{fontFamily:"Poppins",}]}>Fecha: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}> {this.formatdate(item.s_sale_date)}</Text></Text>
@@ -180,7 +193,7 @@ export default class Home extends React.Component{
             return(
               <View style={[styles.box_information,styles.borderGreen]}>
                 <FontAwesome name="check-circle" size={19} style={[{position:'absolute',right:10,top:10, color:'#59f090'},this.state.isSelected == item.s_sales_id ? {opacity:1} : {opacity:0}]} />
-                <TouchableOpacity onPress={() => this.inactiveElementForDelete({c_client_id:item.c_client_id,c_name:item.c_name,s_sale_id:item.s_sales_id,description:item.s_description,date:item.s_sale_date,balance:(parseInt(item.price) - parseInt(item.p_payment_product)),}) } onLongPress={() => this.activeElementForDelete(item.s_sales_id,item.p_products_id,item.s_count,item.s_sale_date,item.price)}><Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Compra</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => this.inactiveElementForDelete({c_client_id:item.c_client_id,c_name:item.c_name,s_sale_id:item.s_sales_id,description:item.s_description,date:item.s_sale_date,balance:(parseInt(item.price) - parseInt(item.p_payment_product)),}) } onLongPress={() => this.activeElementForDelete(item.s_sales_id,item.p_products_id,item.s_count,item.s_sale_date,item.price,index)}><Text style={[styles.title,{fontFamily:"Poppins-Bold",}]}>Compra</Text></TouchableOpacity>
                 <Text style={[styles.text,{fontFamily:"Poppins",}]}>Prenda: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>{item.p_name}</Text></Text>
                 <Text style={[styles.text,{fontFamily:"Poppins",}]}>Cantidad: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>{item.s_count}</Text></Text>
                 <Text style={[styles.text,{fontFamily:"Poppins",}]}>Fecha: <Text style={[styles.textlight,{fontFamily:"Poppins",}]}> {this.formatdate(item.s_sale_date)}</Text></Text>
@@ -196,58 +209,34 @@ export default class Home extends React.Component{
 
   }
 
-  getShopping(id){
+  getShopping(){
     this.isMounted_ = true;
-    if((id == "" || id == "0") || id == null){
-        const { c_client_id } = this.state;
-        let _id_ = JSON.stringify({c_client_id: c_client_id});
-        services.requestGet(routes.sales.list_id,_id_)
-        .then(res => {
-          if(this.isMounted_){
-            this.setState({
-              isLoaded: true,
-              data:res,
-            });
-          }
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }).catch(function(error) {
-          Alert.alert(
-            error.message
-          )
-         // ADD THIS THROW error
-          throw error;
-        });
-
-    }else{
-      let id_ = JSON.stringify({c_client_id: id});
-      services.requestGet(routes.sales.list_id,id_)
-      .then(res => res.json())
-      .then(res => {
-        if(this.isMounted_){
-          this.setState({
-            isLoaded: true,
-            data:res,
-          });
-        }
-      },
-      (error) => {
-        this.setState({
-          isLoaded: true,
-          error
-        });
-      }).catch(function(error) {
-        Alert.alert(
-          error.message
-        )
-       // ADD THIS THROW error
-        throw error;
+    this.setState({isLoaded:true})
+    const { c_client_id } = this.state;
+    let _id_ = JSON.stringify({c_client_id: c_client_id});
+    services.requestGet(routes.sales.list_id,_id_)
+    .then(res => {
+      if(this.isMounted_){
+        this.setState({ data:res });
+        this.props.getBalanceToClients(res);
+        //alert(JSON.stringify(res));
+      }
+    },
+    (error) => {
+      this.setState({
+        isLoaded: true,
+        error
       });
-    }
+    }).finally(() => {
+      this.setState({isLoaded:false});
+      this.isMounted_ = false;
+    }).catch(function(error) {
+      Alert.alert(
+        error.message
+      )
+      // ADD THIS THROW error
+      throw error;
+    });
 
   }
 
@@ -295,14 +284,14 @@ export default class Home extends React.Component{
     let data_ = JSON.stringify({
       s_sales_id: this.state.s_sales_id,
     });
+    let index = this.props.balances.IndexBalance;
     services.requestSet(routes.sales.delete,data_)
-    .then(res => res.text())
     .then(res => {
-      //alert(res);
       if(res == "ok"){
         this.setState({message_alert:'Se ha eliminado el venta correctamente!',bgalert:styles.bgroundGreen});
         this._start();
         this.setState({modalVisible:false,c_client_id:0});
+        this.props.deleteBalanceToClientId(index);
       }else{
         this.setState({message_alert:'Ah ocurrido un error al intentar eliminar esta venta',bgalert:styles.bgroundRed});
         this._start();
@@ -352,13 +341,37 @@ export default class Home extends React.Component{
   }
 
   goToEdit(){
+    this.setState({bground:styles.bgGray,isSelected:0,s_sales_id:0});
+    Animated.sequence([
+      Animated.parallel([
+        Animated.timing(this.state.fadeValue, {
+          toValue: 0,
+          duration: 100,
+        }),
+
+      ]),
+      Animated.delay(50),
+      Animated.parallel([
+        Animated.timing(this.state.bottomValue, {
+          toValue: 50,
+          duration: 100,
+        }),
+      ]),
+    ]).start();
     const { s_sales_id , product , qty, datesale, price, c_client_id } = this.state;
     //alert(product);
-    this.props.navigation.navigate('AddSales',{product:product,s_sales_id:s_sales_id,qty:qty,datesale:datesale, price:price, c_client_id: c_client_id});
+    this.props.navigation.navigate('AddSales',{p_products_id:product,s_sales_id:s_sales_id,qty:qty,datesale:datesale, price:price, c_client_id: c_client_id});
+  }
+  onRefresh() {
+    //Clear old data of the list
+    this.setState({ data: [""] });
+    //Call the Service to get the latest data
+    this.getShopping();
+    //alter table s_sales AUTO_INCREMENT = 1
   }
 
   render(){
-		const { fontsLoaded, poppins, poppinsBold, value, showing, expand, nameicon, nameorder,data, fadeValue, fadeValueAlert,bottomValue,message_alert,bgalert,showingPreloader,modalVisible } = this.state;
+		const { fontsLoaded, poppins, poppinsBold, value, showing, expand, nameicon, nameorder,data, fadeValue, fadeValueAlert,bottomValue,message_alert,bgalert,showingPreloader,modalVisible, isLoaded } = this.state;
     var total = 0;
     data.map((item,i) => {
       total += parseInt(item.price) - parseInt(item.p_payment_product);
@@ -408,7 +421,7 @@ export default class Home extends React.Component{
                  </TouchableOpacity>
                </View>
              </View>
-             <View style={styles.body_}>
+             <View style={styles.body_,{height:HEIGHT-140}}>
                <View style={styles.headerTitle}>
                   <Text style={[styles.textlight,{fontSize:12},{fontFamily:"Poppins",}]}>TODOS</Text>
                   <TouchableOpacity style={styles.buttonorder} onPress={() => this.changeOrder()}>
@@ -421,7 +434,7 @@ export default class Home extends React.Component{
                      />
                    </TouchableOpacity>
                </View>
-               <View style={styles.bar_show_state_}>
+               <View style={[styles.bar_show_state_,{left:17,right:17}]}>
                  <View style={{flexDirection:'row'}}>
                    <View style={[styles.circle,styles.bgroundGreen]}></View>
                    <Text style={[styles.textlight,{fontFamily:"Poppins",fontSize:13,}]}>Controlado</Text>
@@ -438,9 +451,18 @@ export default class Home extends React.Component{
                <FlatList
                  contentContainerStyle={{ justifyContent: 'center', alignItems:'center'}}
                  style={{width:WIDTH,flexGrow:0 }}
-                 data={data}
+                 data={this.props.balances.balances}
                  renderItem={({ item,index }) => this._renderItems_(item,index,total)}
                  keyExtractor={(item,index) => {return index.toString()}}
+                 refreshing={isLoaded}
+                 onRefresh={this.getShopping}
+                 refreshControl={
+                   <RefreshControl
+                     //refresh control used for the Pull to Refresh
+                     refreshing={isLoaded}
+                     onRefresh={this.onRefresh.bind(this)}
+                   />
+                 }
                />
              </View>
              <Animated.View style={[styles.container_float_bottom,{opacity: fadeValue, bottom: bottomValue}]}>
@@ -457,3 +479,23 @@ export default class Home extends React.Component{
       );
 	}
 }
+
+const mapStateToProps = state => {
+  return {
+    balances: state.balances
+  }
+}
+
+const mapDispatchToProps = {
+  getBalanceToClients,
+  setIndexBalanceToClient,
+  setSelectedBalanceToClientId,
+  message,
+  response,
+  setResponse,
+  setBalanceToClientToUpdate,
+  IndexBalance,
+  deleteBalanceToClientId
+};
+
+export default connect( mapStateToProps , mapDispatchToProps )(ViewClient)

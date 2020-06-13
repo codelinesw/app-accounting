@@ -75,13 +75,13 @@ class MenuControls extends React.Component{
           <View style={{display:'flex',flexDirection:'row'}}>
             {
               enable ? <View style={{display:'flex',flexDirection:'row',right:10}}>
-              <TouchableOpacity style={styles._btngray_} onPress={() => this.props.navigation.navigate("AddProduct",_data_)}>
+              <TouchableOpacity style={styles._btngray_} onPress={() => this.props.navigation.navigate(screen_,_data_)}>
                 <Text style={[styles.textlight,{fontFamily:"Poppins",right:3,top:3}]}>Editar</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles._btnwgray_]} onPress={() => this.deleteItem()}>
                 <Text style={[styles.textlight,{fontFamily:"Poppins"}]}>Eliminar</Text>
               </TouchableOpacity>
-            </View>: <TouchableOpacity style={[styles._btngreen_,{right:10}]} onPress={() => this.props.navigation.navigate('AddProduct')}>
+            </View>: <TouchableOpacity style={[styles._btngreen_,{right:10}]} onPress={() => this.props.navigation.navigate(screen_)}>
               <Text style={[styles.textgreen,{fontFamily:"Poppins",left:5}]}>Añadir</Text>
             </TouchableOpacity>
             }

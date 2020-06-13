@@ -34,6 +34,7 @@ class AddClient extends React.Component{
       p_sale_price:JSON.stringify(this.props.navigation.getParam('p_sale_price','')).replace(/\"/g,''),
       p_count:JSON.stringify(this.props.navigation.getParam('p_count','')).replace(/\"/g,''),
       updated:new Date(),
+      Namecategory:'',
       itemIndex:0,
 		  data_: [""],
       data:[""],
@@ -76,6 +77,10 @@ class AddClient extends React.Component{
     .then(res => {
       if(this.isMounted_){
         //alert(res);
+        if(this.state.p_product_categories_id != "" || this.state.p_product_categories_id > 0){
+          let _index_ = res.indexOf(res.find(element => element.p_product_categories_id == this.state.p_product_categories_id));
+          this.setState({data:res,data_:res,Namecategory:res[_index_].p_category_name});
+        }
         this.setState({data:res,data_:res});
       }
     },
@@ -152,6 +157,7 @@ class AddClient extends React.Component{
           this.props.addProduct(data_);
           this.props.getSelectedProductId(response[1]);
           this._start();
+
           //alter table p_products AUTO_INCREMENT = 1;
 				}else{
 					this.setState({message_alert:'Se ha actualizado el registro correctamente!',bgalert:styles.bgroundGreen});
@@ -174,7 +180,7 @@ class AddClient extends React.Component{
           this._start();
           this.props.showOptions(false);
           this.props.setIndexProduct(9999);
-          alert(response);
+          //alert(response);
 				}
 
 		  }else{
@@ -322,7 +328,7 @@ class AddClient extends React.Component{
     const {
     	value, isLoaded, message_alert,fadeValue, bgalert,
    		p_name, p_price,p_sale_price,p_count, p_description,image,data_,
-      indexProduct
+      indexProduct, Namecategory
 	} = this.state;
     let img = (image != null || image != "") ? image.split('/') : image;
 
@@ -353,8 +359,9 @@ class AddClient extends React.Component{
               size={19}
               style={[styles.iconInput,{left:8,},]}
              />
-            <Text style={[styles.textlight,{fontFamily:'Poppins',position:'absolute',top:11,left:25,width:(WIDTH-60),height:47,zIndex: 2}]}>{this.state.itemIndex == 0 ? this.state.data_[this.state.itemIndex].p_category_name : this.state.data_[this.state.itemIndex-1].p_category_name}</Text>
+            <Text style={[styles.textlight,{fontFamily:'Poppins',position:'absolute',top:11,left:25,width:(WIDTH-60),height:47,zIndex: 2}]}>{this.state.itemIndex == 0 && (this.state.p_product_categories_id == "" || this.state.p_product_categories_id == 0) ? this.state.data_[this.state.itemIndex].p_category_name : (this.state.p_product_categories_id != 0 || this.state.p_product_categories_id != "") ? Namecategory : this.state.data_[0].p_category_name}</Text>
             <Picker
+            selectedValue={this.state.p_product_categories_id}
             style={[{fontFamily:'Poppins',},styles.textlight,{position:'absolute',top:-5,left:15,width:(WIDTH-60),height:47,zIndex:1,color:'white'}]}
             itemStyle={{ fontFamily: 'Poppins' }}
             onValueChange={(itemValue, itemIndex_) =>

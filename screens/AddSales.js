@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextInput, View ,Dimensions, TouchableOpacity, Image, Text, Picker, Animated} from 'react-native';
+import { TextInput, View ,Dimensions, TouchableOpacity, Image, Text, Picker, Animated, ActivityIndicator} from 'react-native';
 import styles from '../styles/styles_template';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -7,39 +7,47 @@ import services from "../request/services";
 import routes from "../request/routes";
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
+import { connect } from 'react-redux';
+import {
+	addBalanceToClient,
+  getBalanceToClients,
+  showOptions,
+  isOptionVisible,
+  setIndexBalanceToClient,
+  setSelectedBalanceToClientId,
+  message,
+  response,
+  setResponse,
+  setBalanceToClientToUpdate,
+  IndexBalance
+} from '../src/actions';
 
 
-
-export default class AddSales extends React.Component{
+class AddSales extends React.Component{
 
 	constructor(props) {
   		super(props);
 	  	this.state = {
-		  value:'',
-		  language:'Selecciona un cliente',
-		  product:parseInt(JSON.stringify(this.props.navigation.getParam('product', '1')).replace(/\"/g,'')),
-		  productname: [
-		  	'Jean',
-		  	'Bermuda',
-		  	'Blusa Mujer',
-		  	'Boxer',
-		  	'Buso Hombre',
-		  	'Camisa Hombre',
-		  	'Leggis'
-		  ],
-		  qty: JSON.stringify(this.props.navigation.getParam('qty', '1')).replace(/\"/g,''),
-		  price: JSON.stringify(this.props.navigation.getParam('price', '0')).replace(/\"/g,''),
-		  datesale: '',
-		  date: new Date(),
-		  mode: 'datetime',
-      	  show: false,
-      	  isDateTimePickerVisible: false,
-      	  fadeValue: new Animated.Value(0),
-		  message_alert: 'Por favor complete los campos vacios.',
-		  val: true,
-		  bgalert:'',
-		  c_client_id: JSON.stringify(this.props.navigation.getParam('c_client_id', '')).replace(/\"/g,''),
-		  s_sales_id: JSON.stringify(this.props.navigation.getParam('s_sales_id', '')).replace(/\"/g,'')
+			  value:'',
+			  language:'Selecciona un cliente',
+			  product_id:parseInt(JSON.stringify(this.props.navigation.getParam('p_products_id', '400')).replace(/\"/g,'')),
+				products:[''],
+				indexproduct: 0,
+				productname:'',
+			  qty: JSON.stringify(this.props.navigation.getParam('qty', '0')).replace(/\"/g,''),
+			  price: JSON.stringify(this.props.navigation.getParam('price', '0')).replace(/\"/g,''),
+			  datesale: '',
+			  date: new Date(),
+			  mode: 'datetime',
+	      	show: false,
+	      isDateTimePickerVisible: false,
+	      fadeValue: new Animated.Value(0),
+			  message_alert: 'Por favor complete los campos vacios.',
+			  val: true,
+			  bgalert:'',
+				isLoaded:false,
+			  c_client_id: JSON.stringify(this.props.navigation.getParam('c_client_id', '')).replace(/\"/g,''),
+			  s_sales_id: JSON.stringify(this.props.navigation.getParam('s_sales_id', '')).replace(/\"/g,'')
 	    };
 	}
 
@@ -65,33 +73,75 @@ export default class AddSales extends React.Component{
          ]).start();
 
 
-  	};
-  	componentDidMount(){
-  		this.setState({datesale:this.getFormateDate(this.state.date)})
-  	}
-  	componentWillUnmount() {
-   	  Animated.timing(this.state.fadeValue).stop();
+  };
+  componentDidMount(){
+  	this.setState({datesale:this.getFormateDate(this.state.date)});
+	this.getProducts();
+  }
+  componentWillUnmount() {
+   	Animated.timing(this.state.fadeValue).stop();
+		this.isMounted_ = false;
+	}
+
+	formatToTimeStamp(date){
+		let newdate = date.substring(0,date.indexOf(" ")).split('/');
+		let seconds = date.substring(date.indexOf(" "),date.length);
+    	let formatdate = newdate[2]+"-"+newdate[1]+"-"+newdate[0]+seconds;
+    	return formatdate;
 	}
 	sendData(URL,data_){
 	   this.setState({isLoaded:true});
 	   let response_ = false;
 	   let type_message = URL.split('/');
+		 const { products , product_id, indexproduct , _id, qty , price, datesale, c_client_id, s_sales_id} = this.state;
 	   services.requestSet(URL,data_)
-	   .then(res => res.text())
 	   .then(res => {
 	   	//alert(res);
 		  this.setState({
 		    isLoaded: false,
 		    data_:res,
 		  });
-
-		  if(res == "ok"){
+			let response = res.split('-');
+			let productName = indexproduct > 0 ? products[indexproduct-1].p_name : products[indexproduct].p_name;
+			let description = "Venta de "+qty+" "+productName+" por una valor de $ "+price;
+			if(response[0] == "ok"){
 				if(type_message[5] == "add"){
 				  this.setState({message_alert:'Se realizo la venta correctamente!',bgalert:styles.bgroundGreen});
-			  	  this._start();
+			  	this._start();
+
+					//alert(datesale);
+					let data_ = ({
+						s_sales_id:response[1],
+						p_products_id:product_id,
+						p_name:productName,
+						s_description:description,
+						s_count:qty,
+						price: price,
+						s_sale_date:this.formatToTimeStamp(datesale),
+						c_client_id: c_client_id,
+						p_payment_product:0
+          });
+          this.props.addBalanceToClient(data_);
+          //this.props.setSelectedBalanceToClientId(response[1]);
+          this._start();
+
 				}else{
 				  this.setState({message_alert:'Se ha actualizado esta venta correctamente!',bgalert:styles.bgroundGreen});
-			  	  this._start();
+					 let old_Data = this.props.balances.balances;
+					let data_ = ({
+						s_sales_id:s_sales_id,
+						p_products_id:product_id,
+						p_name:productName,
+						s_description:description,
+						s_count:qty,
+						price: price,
+						s_sale_date:this.formatToTimeStamp(datesale),
+						c_client_id: c_client_id,
+						p_payment_product:0
+          });
+          old_Data[this.props.balances.IndexBalance] = data_;
+					this.props.setBalanceToClientToUpdate(old_Data);
+          this._start();
 				}
 
 		  }else{
@@ -106,46 +156,51 @@ export default class AddSales extends React.Component{
 		  }
 	   },
 	   (error) => {
-		 this.setState({
+		  this.setState({
 		   isLoaded: false,
 		    error
 		  });
+			alert(error);
 	   }).catch(function(error) {
-        Alert.alert(
+        alert(
         	error.message
        	)
         // ADD THIS THROW error
        	throw error;
-       });
+    });
 
 	}
 
 	validateForm(){
 
-		const { product, productname, qty, price, datesale, c_client_id,s_sales_id } = this.state;
+		const { product_id, products,indexproduct, qty, price, datesale, c_client_id,s_sales_id } = this.state;
 
-			if(price == "0" || price == 0 || price == ""){
+			if(product_id == "0" || product_id == 0 || product_id == "" || product_id == "400" || product_id == 400){
+				this.setState({message_alert: 'Por favor un producto',bgalert:styles.bgroundRed});
+				this._start();
+			}else if(price == "0" || price == 0 || price == ""){
 				this.setState({message_alert: 'Por favor agregue el precio de la venta',bgalert:styles.bgroundRed});
 				this._start();
 			}else if(qty == "0" || qty == 0 || qty == ""){
 				this.setState({message_alert: 'Por favor agregue la cantidad vendida',bgalert:styles.bgroundRed});
 				this._start();
 			}else{
+				let productName = indexproduct > 0 ? products[indexproduct-1].p_name : products[indexproduct].p_name;
 				if(s_sales_id == ""){
 					let data_ = JSON.stringify({
-						p_product_id:product,
-						productname:productname[product-1],
+						p_product_id:product_id,
+						productname:productName,
 						qty:qty,
 						price: price,
 						s_sale_date:datesale,
-						c_client_id: c_client_id,
+						c_client_id: c_client_id
 					});
 					//alert('adding...');
 					this.sendData(routes.sales.add,data_);
 				}else{
 					let data_ = JSON.stringify({
-						p_product_id:product,
-						productname:productname[product-1],
+						p_product_id:product_id,
+						productname:productName,
 						qty:qty,
 						price: price,
 						s_sale_date:datesale,
@@ -189,8 +244,44 @@ export default class AddSales extends React.Component{
 	  this.show('time');
 	}
 
+	getProducts(){
+		this.isMounted_ = true;
+		const { type } = this.state;
+		this.setState({isLoaded:true})
+		services.requestGet(routes.products.list,type)
+		.then(res => {
+			if(this.isMounted_){
+				//Get all products our data base
+				//alert(res);
+				if(this.state.product_id != 400){
+					let _index_ = res.indexOf(res.find(element => element.p_products_id == this.state.product_id));
+					this.setState({products:res,productname:res[_index_].p_name});
+				}else{
+					this.setState({products:res});
+				}
+			}
+		},
+		(error) => {
+			this.setState({
+				//isLoaded: false,
+				error
+			});
+		}).finally(() => {
+			this.setState({isLoaded:false});
+			this.isMounted_ = false;
+		}).catch(function(error) {
+			alert(
+				error.message
+			);
+
+		 // ADD THIS THROW error
+			throw error;
+		});
+	}
+
 	render(){
-    const { qty, product, product_id, productname, date, datesale, show, mode, bgalert, fadeValue, message_alert, price } = this.state;
+    const { qty, products, product_id, productname, indexproduct, date, datesale, show, mode, bgalert, fadeValue, message_alert, price, isLoaded } = this.state;
+
 		return(
 			  <View style={[styles.container,{backgroundColor:'white',}]}>
           <View style={[styles.headerTitle,{flexDirection:'column', justifyContent:'flex-start',textAlign:'left',alignItems:'flex-start',height:95,resizeMode: 'contain'}]}>
@@ -209,21 +300,24 @@ export default class AddSales extends React.Component{
 								size={19}
 								style={[styles.iconInput,{left:8,},]}
 							 />
-							<Text style={[styles.textlight,{fontFamily:'Poppins',position:'absolute',top:11,left:25,width:(WIDTH-60),height:47,zIndex: 2}]}>{productname[product-1]}</Text>
+							<Text style={[styles.textlight,{fontFamily:'Poppins',position:'absolute',top:11,left:25,width:(WIDTH-60),height:47,zIndex: 2}]}>{(indexproduct > 0 && (product_id != "400" || product_id != 400)) ? products[indexproduct-1].p_name : (indexproduct == 0 && (product_id != 400 || product_id != "400")) ?  productname : products[indexproduct].p_name }</Text>
 							<Picker
-							selectedValue={this.state.product}
+							selectedValue={this.state.product_id}
 							style={[{fontFamily:'Poppins',},styles.textlight,{position:'absolute',top:-5,left:15,width:(WIDTH-60),height:47,zIndex:1,color:'white'}]}
 							itemStyle={{ fontFamily: 'Poppins' }}
 							onValueChange={(itemValue, itemIndex) =>
-								this.setState({product: itemValue})
+								this.setState({product_id: itemValue,indexproduct: itemIndex})
 							}>
-								<Picker.Item label="Jean" color="#a4a6ac" value="1" />
-								<Picker.Item label="Bermudas" color="#a4a6ac" value="2" />
-								<Picker.Item label="Blusas" color="#a4a6ac" value="3" />
-								<Picker.Item label="Boxer" color="#a4a6ac" value="4" />
-								<Picker.Item label="Busos Hombre" color="#a4a6ac" value="5" />
-								<Picker.Item label="Camisa Hombre" color="#a4a6ac" value="6" />
-								<Picker.Item label="Leggis" color="#a4a6ac" value="7" />
+								<Picker.Item key="400" label="Selecciona un producto" value="400" />
+	              {this.state.products.map((data,i) => {
+	                    if((data == "" || data == undefined)){
+	                      return <Picker.Item key="900" label="Selecciona un producto" color="#a4a6ac" value="load" />
+	                    }else if(Object.values(data) == "empty" || data.response == "empty"){
+	                      return <Picker.Item key="1400" label="No hay productos en el inventario" color="#a4a6ac" value="none" />
+	                    }else{
+	                      return <Picker.Item key={i} value={data.p_products_id} color="#a4a6ac" label={data.p_name} />
+	                    }
+	              })}
 							</Picker>
 							</View>
 						</View>
@@ -272,8 +366,36 @@ export default class AddSales extends React.Component{
 								<Text style={[styles.textwhite,{fontFamily:"Poppins"}]}>Agregar</Text>
 							</TouchableOpacity>
 						</View>
-          			</View>
+          	</View>
+						{
+              isLoaded ? (<View style={styles.container_preloader_expand}>
+                <View style={styles.preloader}><ActivityIndicator size="large" /></View>
+              </View>) : null
+            }
     		</View>
 			);
 	}
 }
+
+
+const mapStateToProps = state => {
+  return {
+    balances: state.balances
+  }
+}
+
+const mapDispatchToProps = {
+	addBalanceToClient,
+  getBalanceToClients,
+  showOptions,
+  isOptionVisible,
+  setIndexBalanceToClient,
+  setSelectedBalanceToClientId,
+  message,
+  response,
+  setResponse,
+  setBalanceToClientToUpdate,
+  IndexBalance
+};
+
+export default connect( mapStateToProps , mapDispatchToProps )(AddSales)

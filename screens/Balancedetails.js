@@ -5,6 +5,10 @@ import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import services from "../request/services";
 import routes from "../request/routes";
 
+//-15abr
+
+//6
+
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;

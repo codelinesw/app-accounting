@@ -139,18 +139,6 @@ const RootStack = createStackNavigator(
     },
     ViewClient: {
       screen:ViewClient,
-      navigationOptions: ({navigation}) => ({
-        title:'Saldos del cliente',
-        headerLeft: (
-          <ButtonMenu navigation={navigation}/>
-        ),
-        headerRight: (
-          <ButtonAdd typeButton="addsales" navigation={navigation} />
-        ),
-        headerTitleStyle: {
-          fontFamily: "Poppins",
-        }
-      })
     },
     AddBalances : {
       screen: AddBalances,

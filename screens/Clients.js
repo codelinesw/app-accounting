@@ -219,10 +219,10 @@ class Clients extends React.Component{
             <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>{item.c_name.substring(0,item.c_name.indexOf(" "))} es un cliente que le gusta hacer compras constantemente de jeans</Text>
             <View style={styles.btnGroup}>
               <TouchableOpacity style={styles.btngray} onPress={() => this.handleAddClient(item.c_client_id,{c_client_id:item.c_client_id,c_name:item.c_name,c_phone:item.c_phone,c_address:item.c_address,c_date:item.c_date},index)}>
-                <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Editar</Text>
+                <Text style={[styles.textlight]}>Editar</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.btnwgray} onPress={() => this.showModal(item.c_client_id,index)}>
-                <Text style={[styles.textlight,{fontFamily:"Poppins",}]}>Eliminar</Text>
+                <Text style={[styles.textlight]}>Eliminar</Text>
               </TouchableOpacity>
             </View>
             <TouchableOpacity style={styles.btnfavorites}>

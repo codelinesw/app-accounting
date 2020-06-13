@@ -756,7 +756,6 @@ const styles = StyleSheet.create({
     width:(WIDTH-25),
     height:50,
 
-
   },
 
   bgroundActive: {
@@ -852,7 +851,9 @@ const styles = StyleSheet.create({
 
   baractive:{
     backgroundColor:bgGreen
-  }
+  },
+
+
 });
 
 

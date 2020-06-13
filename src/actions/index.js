@@ -129,6 +129,68 @@ export function setProducttoUpdate(product){
     payload: product
   }
 }
+
+/** FUNCTIONS TO BALANCES TO CLIENT **/
+
+export function addBalanceToClient(balance){
+  console.log("ACTIONS::ADD_BALANCE_TO_CLIENT",balance)
+  return {
+    type: 'ADD_BALANCE',
+    payload:balance
+  }
+}
+
+//Get all data to client selected
+export function setSelectedBalanceToClientId(productId) {
+  //console.log("ACTIONS::GET_SELECTED_CLIENT_ID",productId)
+  return {
+    type: 'GET_SELECTED_BALANCE_ID',
+    payload: productId
+  }
+}
+
+
+//Get all position of data into array
+export function setIndexBalanceToClient(itemIndex){
+  return{
+    type:'SET_SELECT_BALANCE_INDEX',
+    payload:itemIndex
+  }
+}
+
+
+// Get all products with his info
+export function getBalanceToClients(balances){
+  console.log("ACTIONS::GET_CLIENTS",balances)
+    return {
+      type: 'GET_BALANCES',
+      payload: balances
+    }
+}
+
+export function setBalanceToClientId(productId){
+  console.log("ACTIONS::SET_CLIENTS_ID",productId)
+  return {
+    type: 'SET_BALANCE_ID',
+    payload: productId
+  }
+}
+
+
+export function deleteBalanceToClientId(clientId){
+  //console.log("ACTIONS::DELETE_BALANCE_ID",clientId)
+  return{
+    type: 'DELETE_BALANCE_ID',
+    payload: clientId
+  }
+}
+
+export function setBalanceToClientToUpdate(product){
+  return{
+    type:'BALANCE_TO_UPDATE',
+    payload: product
+  }
+}
 // export const fetchData = (callback) => {
 //   return (dispatch) => {
 //      dispatch(getClients())

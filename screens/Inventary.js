@@ -35,7 +35,7 @@ class Inventary extends React.Component{
          top:2,
      },
     headerRight:(
-      <MenuControls navigation={navigation}/>
+      <MenuControls navigation={navigation} screen_="AddSales" />
     )
   });
 
